@@ -1,0 +1,6 @@
+teleop_twist_joy:
+  axis_linear: 1  # Adjust this according to your joystick axes
+  axis_angular: 0  # Adjust this according to your joystick axes
+  scale_linear: 0.5  # Scale factor for linear movement
+  scale_angular: 1.0  # Scale factor for angular movement
+  enable_button: 5  # Button to enable/disable teleop
