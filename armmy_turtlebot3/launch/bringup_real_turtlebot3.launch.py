@@ -17,6 +17,7 @@
 # Authors: Darby Lim
 
 import os
+import yaml
 
 from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription
@@ -29,8 +30,19 @@ from launch_ros.actions import Node
 
 
 def generate_launch_description():
-    TURTLEBOT3_MODEL = os.environ['TURTLEBOT3_MODEL']
-    LDS_MODEL = os.environ['LDS_MODEL']
+    default_config_file = os.path.join(
+        get_package_share_directory('armmy_turtlebot3'),
+        'config',
+        'tb3_real.yaml'
+    )
+
+    # Load configuration from YAML file
+    with open(default_config_file, 'r') as file:
+        config = yaml.safe_load(file)
+
+    # Access the values from the config
+    TURTLEBOT3_MODEL = config['Turtlebot3_model']
+    LDS_MODEL = config['Lidar_model']
     LDS_LAUNCH_FILE = '/hlds_laser.launch.py'
 
     usb_port = LaunchConfiguration('usb_port', default='/dev/ttyACM0')
@@ -76,7 +88,7 @@ def generate_launch_description():
 
         IncludeLaunchDescription(
             PythonLaunchDescriptionSource(
-                [ThisLaunchFileDir(), '/turtlebot3_state_publisher.launch.py']),
+                [get_package_share_directory('turtlebot3_bringup'),'/launch/', '/turtlebot3_state_publisher.launch.py']),
             launch_arguments={'use_sim_time': use_sim_time}.items(),
         ),
 
@@ -91,4 +103,12 @@ def generate_launch_description():
             parameters=[tb3_param_dir],
             arguments=['-i', usb_port],
             output='screen'),
+
+        Node(
+            package='foxglove_bridge',
+            executable='foxglove_bridge',
+            name='foxglove_bridge',
+            output='screen',
+            parameters=[{'use_sim_time': use_sim_time}],
+    )
     ])

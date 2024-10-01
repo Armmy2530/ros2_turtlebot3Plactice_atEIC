@@ -59,10 +59,16 @@ from ament_index_python.packages import get_package_share_directory
 def generate_launch_description():
     # Get the directory of the nav2_bringup package
     bringup_dir = get_package_share_directory('nav2_bringup')
+    default_nav2_config = os.path.join(
+        get_package_share_directory('armmy_turtlebot3'),
+        'config',
+        'nav2_tb3_gazebo_params.yaml'
+    )
 
     # Create launch configuration variables
     use_sim_time = LaunchConfiguration('use_sim_time')
     map_yaml_file = LaunchConfiguration('map')
+    nav2_config = LaunchConfiguration('nav2_config' , default=default_nav2_config)
 
     default_map = get_package_share_directory('armmy_turtlebot3') + '/map/1_280924_tb3_world_carthographer/map_1727461600.yaml'
 
@@ -84,7 +90,8 @@ def generate_launch_description():
         PythonLaunchDescriptionSource(os.path.join(bringup_dir, 'launch', 'localization_launch.py')),
         launch_arguments={
             'use_sim_time': use_sim_time,
-            'map': map_yaml_file
+            'map': map_yaml_file,
+            'params_file' : nav2_config,
         }.items()
     )
 
@@ -92,7 +99,8 @@ def generate_launch_description():
     navigation_launch = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(os.path.join(bringup_dir, 'launch', 'navigation_launch.py')),
         launch_arguments={
-            'use_sim_time': use_sim_time
+            'use_sim_time': use_sim_time,
+            'params_file' : nav2_config,
         }.items()
     )
 
