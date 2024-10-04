@@ -10,7 +10,7 @@ def generate_launch_description():
 
     config_dir = os.path.join(
         get_package_share_directory('armmy_turtlebot3'),
-        'config'
+        'config','slam'
     )
     config_file = 'turtlebot3_cartographer.lua'
 

@@ -36,11 +36,14 @@ def generate_launch_description():
         'turtlebot3_world.world'
     )
 
+    defalut_gz_params = os.path.join(get_package_share_directory('armmy_turtlebot3'),'config','gazebo','gazebo_params.yaml')
+
     use_sim_time = LaunchConfiguration('use_sim_time', default='true')
     x_pose = LaunchConfiguration('x_pose', default='-2.0')
     y_pose = LaunchConfiguration('y_pose', default='1.0')
     gz_verbose = LaunchConfiguration('verbose', default='false')
     world_file = LaunchConfiguration('world', default=default_world)
+    gz_params = LaunchConfiguration('gz_params', default=defalut_gz_params)
 
     gzmodel_cmd  = SetEnvironmentVariable(
         name='GAZEBO_MODEL_PATH',
@@ -51,7 +54,7 @@ def generate_launch_description():
         PythonLaunchDescriptionSource(
             os.path.join(pkg_gazebo_ros, 'launch', 'gzserver.launch.py')
         ),
-        launch_arguments={'world': world_file,'verbose': gz_verbose}.items()
+        launch_arguments={'world': world_file,'verbose': gz_verbose,'extra_gazebo_args':'--ros-args --params-file '+defalut_gz_params}.items()
     )
 
     gzclient_cmd = IncludeLaunchDescription(
