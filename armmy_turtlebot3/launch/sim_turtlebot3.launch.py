@@ -27,11 +27,11 @@ from launch_ros.actions import Node
 from launch.actions import SetEnvironmentVariable
 
 def generate_launch_description():
-    launch_file_dir = os.path.join(get_package_share_directory('turtlebot3_gazebo'), 'launch')
+    armmy_turtlebot3_launch_file_dir = os.path.join(get_package_share_directory('armmy_turtlebot3'), 'launch')
     pkg_gazebo_ros = get_package_share_directory('gazebo_ros')
 
     default_world = os.path.join(
-        get_package_share_directory('turtlebot3_gazebo'),
+        get_package_share_directory('armmy_turtlebot3'),
         'worlds',
         'turtlebot3_world.world'
     )
@@ -43,7 +43,7 @@ def generate_launch_description():
     y_pose = LaunchConfiguration('y_pose', default='1.0')
     gz_verbose = LaunchConfiguration('verbose', default='false')
     world_file = LaunchConfiguration('world', default=default_world)
-    gz_params = LaunchConfiguration('gz_params', default=defalut_gz_params)
+    robot_model = LaunchConfiguration('robot_model', default='turtlebot3_burger')
 
     gzmodel_cmd  = SetEnvironmentVariable(
         name='GAZEBO_MODEL_PATH',
@@ -73,18 +73,22 @@ def generate_launch_description():
 
     robot_state_publisher_cmd = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
-            os.path.join(launch_file_dir, 'robot_state_publisher.launch.py')
+            os.path.join(armmy_turtlebot3_launch_file_dir, 'robot_state_publisher.launch.py')
         ),
-        launch_arguments={'use_sim_time': use_sim_time}.items()
+        launch_arguments={
+            'use_sim_time': use_sim_time,
+            'robot_model': robot_model
+        }.items()
     )
 
     spawn_turtlebot_cmd = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
-            os.path.join(launch_file_dir, 'spawn_turtlebot3.launch.py')
+            os.path.join(armmy_turtlebot3_launch_file_dir, 'spawn_robot.launch.py')
         ),
         launch_arguments={
             'x_pose': x_pose,
-            'y_pose': y_pose
+            'y_pose': y_pose,
+            'robot_model': robot_model
         }.items()
     )
 

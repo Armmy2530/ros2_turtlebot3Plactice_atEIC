@@ -30,6 +30,8 @@ install(
     config
     map
     worlds
+    models
+    urdf
   DESTINATION share/${PROJECT_NAME}/
 )
 
