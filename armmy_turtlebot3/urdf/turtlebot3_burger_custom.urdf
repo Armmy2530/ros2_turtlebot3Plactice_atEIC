@@ -1,8 +1,17 @@
 <?xml version="1.0" ?>
-<robot name="turtlebot3_burger"
+<robot name="turtlebot3_burger_custom"
   xmlns:xacro="http://ros.org/wiki/xacro">
   <!-- <xacro:include filename="$(find turtlebot3_description)/urdf/common_properties.urdf"/> -->
 
+  <xacro:arg name="use_ros2_control" default="true"/>
+
+  <xacro:if value="$(arg use_ros2_control)">
+      <xacro:include filename="ros2_control.xacro" />
+  </xacro:if>
+  <xacro:unless value="$(arg use_ros2_control)">
+      <xacro:include filename="gazebo_control.xacro" />
+  </xacro:unless>
+    
   <!-- Init colour -->
   <material name="black">
       <color rgba="0.0 0.0 0.0 1.0"/>
@@ -91,7 +100,7 @@
       <material name="dark"/>
     </visual>
 
-    <collision>
+    <collision name="wheel_left_collision">
       <origin xyz="0 0 0" rpy="0 0 0"/>
       <geometry>
         <cylinder length="0.018" radius="0.033"/>
@@ -104,6 +113,31 @@
       <inertia ixx="1.1175580e-05" ixy="-4.2369783e-11" ixz="-5.9381719e-09" iyy="1.1192413e-05" iyz="-1.4400107e-11" izz="2.0712558e-05" />
     </inertial>
   </link>
+
+  <gazebo reference="wheel_left_collision">
+    <surface>
+      <!-- This friction pamareter don't contain reliable data!! -->
+      <friction>
+        <ode>
+          <mu>100000.0</mu>
+          <mu2>100000.0</mu2>
+          <fdir1>0 0 0</fdir1>
+          <slip1>0.0</slip1>
+          <slip2>0.0</slip2>
+        </ode>
+      </friction>
+      <contact>
+        <ode>
+          <soft_cfm>0</soft_cfm>
+          <soft_erp>0.2</soft_erp>
+          <kp>1e+5</kp>
+          <kd>1</kd>
+          <max_vel>0.01</max_vel>
+          <min_depth>0.001</min_depth>
+        </ode>
+      </contact>
+    </surface>
+  </gazebo>
 
   <joint name="wheel_right_joint" type="continuous">
     <parent link="base_link"/>
@@ -121,7 +155,7 @@
       <material name="dark"/>
     </visual>
 
-    <collision>
+    <collision name="wheel_right_collision">
       <origin xyz="0 0 0" rpy="0 0 0"/>
       <geometry>
         <cylinder length="0.018" radius="0.033"/>
@@ -135,6 +169,31 @@
     </inertial>
   </link>
 
+  <gazebo reference="wheel_right_collision">
+    <surface>
+      <!-- This friction pamareter don't contain reliable data!! -->
+      <friction>
+        <ode>
+          <mu>100000.0</mu>
+          <mu2>100000.0</mu2>
+          <fdir1>0 0 0</fdir1>
+          <slip1>0.0</slip1>
+          <slip2>0.0</slip2>
+        </ode>
+      </friction>
+      <contact>
+        <ode>
+          <soft_cfm>0</soft_cfm>
+          <soft_erp>0.2</soft_erp>
+          <kp>1e+5</kp>
+          <kd>1</kd>
+          <max_vel>0.01</max_vel>
+          <min_depth>0.001</min_depth>
+        </ode>
+      </contact>
+    </surface>
+  </gazebo>
+
   <joint name="caster_back_joint" type="fixed">
     <parent link="base_link"/>
     <child link="caster_back_link"/>
@@ -142,7 +201,7 @@
   </joint>
 
   <link name="caster_back_link">
-    <collision>
+    <collision name="caster_back_collision">
       <origin xyz="0 0.001 0" rpy="0 0 0"/>
       <geometry>
         <box size="0.030 0.009 0.020"/>
@@ -156,6 +215,21 @@
     </inertial>
   </link>
 
+  <gazebo reference="caster_back_collision">
+    <surface>
+      <contact>
+        <ode>
+          <soft_cfm>0</soft_cfm>
+          <soft_erp>0.2</soft_erp>
+          <kp>1e+5</kp>
+          <kd>1</kd>
+          <max_vel>0.01</max_vel>
+          <min_depth>0.001</min_depth>
+        </ode>
+      </contact>
+    </surface>
+  </gazebo>
+
   <joint name="imu_joint" type="fixed">
     <parent link="base_link"/>
     <child link="imu_link"/>
@@ -163,6 +237,62 @@
   </joint>
 
   <link name="imu_link"/>
+
+  <!-- Gazebo IMU -->
+  <gazebo reference="imu_link">
+    <sensor name="tb3_imu" type="imu">
+      <always_on>true</always_on>
+      <update_rate>200</update_rate>
+      <imu>
+        <angular_velocity>
+          <x>
+            <noise type="gaussian">
+              <mean>0.0</mean>
+              <stddev>2e-4</stddev>
+            </noise>
+          </x>
+          <y>
+            <noise type="gaussian">
+              <mean>0.0</mean>
+              <stddev>2e-4</stddev>
+            </noise>
+          </y>
+          <z>
+            <noise type="gaussian">
+              <mean>0.0</mean>
+              <stddev>2e-4</stddev>
+            </noise>
+          </z>
+        </angular_velocity>
+        <linear_acceleration>
+          <x>
+            <noise type="gaussian">
+              <mean>0.0</mean>
+              <stddev>1.7e-2</stddev>
+            </noise>
+          </x>
+          <y>
+            <noise type="gaussian">
+              <mean>0.0</mean>
+              <stddev>1.7e-2</stddev>
+            </noise>
+          </y>
+          <z>
+            <noise type="gaussian">
+              <mean>0.0</mean>
+              <stddev>1.7e-2</stddev>
+            </noise>
+          </z>
+        </linear_acceleration>
+      </imu>
+      <plugin name="turtlebot3_imu" filename="libgazebo_ros_imu_sensor.so">
+        <ros>
+          <!-- <namespace>/tb3</namespace> -->
+          <remapping>~/out:=imu</remapping>
+        </ros>
+      </plugin>
+    </sensor>
+  </gazebo>
 
   <joint name="scan_joint" type="fixed">
     <parent link="base_link"/>
@@ -193,6 +323,44 @@
     </inertial>
   </link>
 
+  <!-- Gazebo Lidar(Laser scan) -->
+  <gazebo reference="base_scan">
+    <sensor name="hls_lfcd_lds" type="ray">
+      <always_on>true</always_on>
+      <visualize>true</visualize>
+      <pose>0 0 0 0 0 0</pose>
+      <update_rate>5</update_rate>
+      <ray>
+        <scan>
+          <horizontal>
+            <samples>360</samples>
+            <resolution>1.000000</resolution>
+            <min_angle>0.000000</min_angle>
+            <max_angle>6.280000</max_angle>
+          </horizontal>
+        </scan>
+        <range>
+          <min>0.120000</min>
+          <max>3.5</max>
+          <resolution>0.015000</resolution>
+        </range>
+        <noise>
+          <type>gaussian</type>
+          <mean>0.0</mean>
+          <stddev>0.01</stddev>
+        </noise>
+      </ray>
+      <plugin name="turtlebot3_laserscan" filename="libgazebo_ros_ray_sensor.so">
+        <ros>
+          <!-- <namespace>/tb3</namespace> -->
+          <remapping>~/out:=scan</remapping>
+        </ros>
+        <output_type>sensor_msgs/LaserScan</output_type>
+        <frame_name>base_scan</frame_name>
+      </plugin>
+    </sensor>
+  </gazebo>
+
   <!-- Add a new link for the arm -->
   <link name="arm_link">
     <visual>
@@ -200,18 +368,105 @@
       <geometry>
         <box size="0.15 0.01 0.01"/>
       </geometry>
-      <material name="green">
-        <color rgba="0 1 0 1"/>
-      </material>
+      <material name="green"/>
     </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <box size="0.15 0.01 0.01"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="0.1"/>
+      <inertia ixx="0.001" ixy="0" ixz="0" iyy="0.001" iyz="0" izz="0.001"/>
+    </inertial>
   </link>
 
   <!-- Add a joint to attach the arm to the base or another link -->
   <joint name="arm_joint" type="revolute">
-    <parent link="base_link"/>
+    <parent link="base_footprint"/>
     <child link="arm_link"/>
-    <origin xyz="0 0 0.181" rpy="0 0 0"/>
+    <origin xyz="0 0 0.201" rpy="0 0 0"/>
     <axis xyz="0 0 1"/>
     <limit lower="-1.57" upper="1.57" effort="5" velocity="1.0"/>
   </joint>
+
+  <xacro:if value="$(arg sim_mode)">
+        <ros2_control name="GazeboSystem" type="system">
+            <hardware>
+                <plugin>gazebo_ros2_control/GazeboSystem</plugin>
+            </hardware>
+            <joint name="left_wheel_joint">
+                <command_interface name="velocity">
+                    <param name="min">-10</param>
+                    <param name="max">10</param>
+                </command_interface>
+                <state_interface name="velocity"/>
+                <state_interface name="position"/>
+            </joint>
+            <joint name="right_wheel_joint">
+                <command_interface name="velocity">
+                    <param name="min">-10</param>
+                    <param name="max">10</param>
+                </command_interface>
+                <state_interface name="velocity"/>
+                <state_interface name="position"/>
+            </joint>
+        </ros2_control>
+    </xacro:if>
+
+    <gazebo>
+        <plugin name="gazebo_ros2_control" filename="libgazebo_ros2_control.so">
+            <parameters>$(find articubot_one)/config/my_controllers.yaml</parameters>
+            <parameters>$(find articubot_one)/config/gaz_ros2_ctl_use_sim.yaml</parameters>
+        </plugin>
+    </gazebo>
+    
+  <!-- Gazebo drive -->
+  <gazebo>
+    <plugin name="turtlebot3_diff_drive" filename="libgazebo_ros_diff_drive.so">
+
+      <ros>
+        <!-- <namespace>/tb3</namespace> -->
+      </ros>
+
+      <update_rate>30</update_rate>
+
+      <!-- wheels -->
+      <left_joint>wheel_left_joint</left_joint>
+      <right_joint>wheel_right_joint</right_joint>
+
+      <!-- kinematics -->
+      <wheel_separation>0.160</wheel_separation>
+      <wheel_diameter>0.066</wheel_diameter>
+
+      <!-- limits -->
+      <max_wheel_torque>20</max_wheel_torque>
+      <max_wheel_acceleration>1.0</max_wheel_acceleration>
+
+      <command_topic>cmd_vel</command_topic>
+
+      <!-- output -->
+      <publish_odom>true</publish_odom>
+      <publish_odom_tf>true</publish_odom_tf>
+      <publish_wheel_tf>false</publish_wheel_tf>
+
+      <odometry_topic>odom</odometry_topic>
+      <odometry_frame>odom</odometry_frame>
+      <robot_base_frame>base_footprint</robot_base_frame>
+
+    </plugin>
+  </gazebo>
+
+  <gazebo>
+    <plugin name="turtlebot3_joint_state" filename="libgazebo_ros_joint_state_publisher.so">
+      <ros>
+        <!-- <namespace>/tb3</namespace> -->
+        <remapping>~/out:=joint_states</remapping>
+      </ros>
+      <update_rate>30</update_rate>
+      <joint_name>wheel_left_joint</joint_name>
+      <joint_name>wheel_right_joint</joint_name>
+    </plugin>     
+  </gazebo>
 </robot>

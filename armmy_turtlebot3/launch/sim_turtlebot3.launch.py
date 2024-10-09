@@ -43,7 +43,7 @@ def generate_launch_description():
     y_pose = LaunchConfiguration('y_pose', default='1.0')
     gz_verbose = LaunchConfiguration('verbose', default='false')
     world_file = LaunchConfiguration('world', default=default_world)
-    robot_model = LaunchConfiguration('robot_model', default='turtlebot3_burger')
+    robot_model = LaunchConfiguration('robot_model', default=os.path.join(get_package_share_directory('armmy_turtlebot3'), 'urdf','turtlebot3_burger_custom.urdf'))
 
     gzmodel_cmd  = SetEnvironmentVariable(
         name='GAZEBO_MODEL_PATH',
@@ -81,16 +81,14 @@ def generate_launch_description():
         }.items()
     )
 
-    spawn_turtlebot_cmd = IncludeLaunchDescription(
-        PythonLaunchDescriptionSource(
-            os.path.join(armmy_turtlebot3_launch_file_dir, 'spawn_robot.launch.py')
-        ),
-        launch_arguments={
-            'x_pose': x_pose,
-            'y_pose': y_pose,
-            'robot_model': robot_model
-        }.items()
-    )
+    # Run the spawner node from the gazebo_ros package. The entity name doesn't really matter if you only have a single robot.
+    spawn_turtlebot_cmd = Node(package='gazebo_ros', executable='spawn_entity.py',
+                        arguments=['-topic', 'robot_description',
+                                    '-entity', 'my_bot',
+                                    '-x', x_pose,
+                                    '-y', y_pose,
+                                    '-z','0.01'],
+                        output='screen')
 
     ld = LaunchDescription()
 
