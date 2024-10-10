@@ -73,7 +73,7 @@
 
     <inertial>
       <origin xyz="0 0 0" rpy="0 0 0"/>
-      <mass value="8.2573504e-01"/>
+      <mass value="0.1"/>
       <inertia ixx="2.2124416e-03" ixy="-1.2294101e-05" ixz="3.4938785e-05" iyy="2.1193702e-03" iyz="-5.0120904e-06" izz="2.0064271e-03" />
     </inertial>
   </link>
@@ -97,7 +97,7 @@
     <collision name="wheel_left_collision">
       <origin xyz="0 0 0" rpy="0 0 0"/>
       <geometry>
-        <cylinder length="0.018" radius="0.033"/>
+        <sphere radius="0.033"/>
       </geometry>
     </collision>
 
@@ -113,23 +113,10 @@
       <!-- This friction pamareter don't contain reliable data!! -->
       <friction>
         <ode>
-          <mu>100000.0</mu>
-          <mu2>100000.0</mu2>
-          <fdir1>0 0 0</fdir1>
-          <slip1>0.0</slip1>
-          <slip2>0.0</slip2>
+          <mu>5.0</mu>
+          <mu2>5.0</mu2>
         </ode>
       </friction>
-      <contact>
-        <ode>
-          <soft_cfm>0</soft_cfm>
-          <soft_erp>0.2</soft_erp>
-          <kp>1e+5</kp>
-          <kd>1</kd>
-          <max_vel>0.01</max_vel>
-          <min_depth>0.001</min_depth>
-        </ode>
-      </contact>
     </surface>
   </gazebo>
 
@@ -152,7 +139,7 @@
     <collision name="wheel_right_collision">
       <origin xyz="0 0 0" rpy="0 0 0"/>
       <geometry>
-        <cylinder length="0.018" radius="0.033"/>
+        <sphere radius="0.033"/>
       </geometry>
     </collision>
 
@@ -168,23 +155,10 @@
       <!-- This friction pamareter don't contain reliable data!! -->
       <friction>
         <ode>
-          <mu>100000.0</mu>
-          <mu2>100000.0</mu2>
-          <fdir1>0 0 0</fdir1>
-          <slip1>0.0</slip1>
-          <slip2>0.0</slip2>
+          <mu>5.0</mu>
+          <mu2>5.0</mu2>
         </ode>
       </friction>
-      <contact>
-        <ode>
-          <soft_cfm>0</soft_cfm>
-          <soft_erp>0.2</soft_erp>
-          <kp>1e+5</kp>
-          <kd>1</kd>
-          <max_vel>0.01</max_vel>
-          <min_depth>0.001</min_depth>
-        </ode>
-      </contact>
     </surface>
   </gazebo>
 
@@ -222,6 +196,12 @@
         </ode>
       </contact>
     </surface>
+  </gazebo>
+
+  <gazebo reference="caster_back_link">
+    <material>Gazebo/White</material>
+    <mu1 value="0.001"/>
+    <mu2 value="0.001"/>
   </gazebo>
 
   <joint name="imu_joint" type="fixed">
@@ -356,7 +336,7 @@
   </gazebo>
 
   <!-- Add a new link for the arm -->
-  <link name="arm_link">
+  <!-- <link name="arm_link">
     <visual>
       <origin xyz="0 0 0" rpy="0 0 0"/>
       <geometry>
@@ -374,42 +354,40 @@
       <mass value="0.1"/>
       <inertia ixx="0.001" ixy="0" ixz="0" iyy="0.001" iyz="0" izz="0.001"/>
     </inertial>
-  </link>
+  </link> -->
 
   <!-- Add a joint to attach the arm to the base or another link -->
-  <joint name="arm_joint" type="revolute">
-    <parent link="base_footprint"/>
+  <!-- <joint name="arm_joint" type="revolute">
+    <parent link="base_link"/>
     <child link="arm_link"/>
     <origin xyz="0 0 0.201" rpy="0 0 0"/>
     <axis xyz="0 0 1"/>
     <limit lower="-1.57" upper="1.57" effort="5" velocity="1.0"/>
-  </joint>
+  </joint> -->
 
 
   <xacro:if value="$(arg use_ros2_control)">
-    <xacro:if value="$(arg sim_mode)">
-      <ros2_control name="GazeboSystem" type="system">
-          <hardware>
-              <plugin>gazebo_ros2_control/GazeboSystem</plugin>
-          </hardware>
-          <joint name="wheel_left_joint">
-              <command_interface name="velocity">
-                  <param name="min">-10</param>
-                  <param name="max">10</param>
-              </command_interface>
-              <state_interface name="velocity"/>
-              <state_interface name="position"/>
-          </joint>
-          <joint name="wheel_right_joint">
-              <command_interface name="velocity">
-                  <param name="min">-10</param>
-                  <param name="max">10</param>
-              </command_interface>
-              <state_interface name="velocity"/>
-              <state_interface name="position"/>
-          </joint>
-      </ros2_control>
-    </xacro:if>
+    <ros2_control name="GazeboSystem" type="system">
+        <hardware>
+            <plugin>gazebo_ros2_control/GazeboSystem</plugin>
+        </hardware>
+        <joint name="wheel_left_joint">
+            <command_interface name="velocity">
+                <param name="min">-10</param>
+                <param name="max">10</param>
+            </command_interface>
+            <state_interface name="velocity"/>
+            <state_interface name="position"/>
+        </joint>
+        <joint name="wheel_right_joint">
+            <command_interface name="velocity">
+                <param name="min">-10</param>
+                <param name="max">10</param>
+            </command_interface>
+            <state_interface name="velocity"/>
+            <state_interface name="position"/>
+        </joint>
+    </ros2_control>
     <gazebo>
       <plugin name="gazebo_ros2_control" filename="libgazebo_ros2_control.so">
           <parameters>$(find armmy_turtlebot3)/config/ros2_controller/my_controllers.yaml</parameters>
@@ -451,7 +429,7 @@
 
         <odometry_topic>odom</odometry_topic>
         <odometry_frame>odom</odometry_frame>
-        <robot_base_frame>base_footprint</robot_base_frame>
+        <robot_base_frame>base_link</robot_base_frame>
 
       </plugin>
     </gazebo>

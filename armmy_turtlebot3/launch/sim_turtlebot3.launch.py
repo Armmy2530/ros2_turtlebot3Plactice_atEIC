@@ -27,23 +27,26 @@ from launch_ros.actions import Node
 from launch.actions import SetEnvironmentVariable
 
 def generate_launch_description():
-    armmy_turtlebot3_launch_file_dir = os.path.join(get_package_share_directory('armmy_turtlebot3'), 'launch')
+    package_name = 'armmy_turtlebot3'
+
+    armmy_turtlebot3_launch_file_dir = os.path.join(get_package_share_directory(package_name), 'launch')
     pkg_gazebo_ros = get_package_share_directory('gazebo_ros')
 
     default_world = os.path.join(
-        get_package_share_directory('armmy_turtlebot3'),
+        get_package_share_directory(package_name),
         'worlds',
         'turtlebot3_world.world'
     )
 
-    defalut_gz_params = os.path.join(get_package_share_directory('armmy_turtlebot3'),'config','gazebo','gazebo_params.yaml')
+    defalut_gz_params = os.path.join(get_package_share_directory(package_name),'config','gazebo','gazebo_params.yaml')
 
     use_sim_time = LaunchConfiguration('use_sim_time', default='true')
     x_pose = LaunchConfiguration('x_pose', default='-2.0')
     y_pose = LaunchConfiguration('y_pose', default='1.0')
     gz_verbose = LaunchConfiguration('verbose', default='false')
     world_file = LaunchConfiguration('world', default=default_world)
-    robot_model = LaunchConfiguration('robot_model', default=os.path.join(get_package_share_directory('armmy_turtlebot3'), 'urdf','turtlebot3_burger_custom.urdf'))
+    robot_model = LaunchConfiguration('robot_model', default=os.path.join(get_package_share_directory(package_name), 'urdf','turtlebot3_burger_custom.urdf'))
+    # robot_model = LaunchConfiguration('robot_model', default=os.path.join(get_package_share_directory(package_name), 'urdf','articubot','robot.urdf.xacro'))
     use_ros2_control = LaunchConfiguration('use_ros2_control', default='true')
 
     gzmodel_cmd  = SetEnvironmentVariable(
@@ -72,6 +75,14 @@ def generate_launch_description():
             parameters=[{'use_sim_time': use_sim_time}],
     )
 
+    twist_mux_params = os.path.join(get_package_share_directory(package_name),'config','twist_mux','twist_mux.yaml')
+    twist_mux = Node(
+            package="twist_mux",
+            executable="twist_mux",
+            parameters=[twist_mux_params, {'use_sim_time': True}],
+            remappings=[('/cmd_vel_out','/diff_cont/cmd_vel_unstamped')]
+        )
+    
     robot_state_publisher_cmd = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
             os.path.join(armmy_turtlebot3_launch_file_dir, 'robot_state_publisher.launch.py')
@@ -107,13 +118,14 @@ def generate_launch_description():
     ld = LaunchDescription()
 
     # Add the commands to the launch description
+    ld.add_action(robot_state_publisher_cmd)
     ld.add_action(gzmodel_cmd)
     ld.add_action(gzserver_cmd)
     ld.add_action(gzclient_cmd)
-    ld.add_action(robot_state_publisher_cmd)
     ld.add_action(spawn_turtlebot_cmd)
     ld.add_action(diff_drive_spawner)
     ld.add_action(joint_broad_spawner)
     ld.add_action(foxgloveBridge_cmd)
+    ld.add_action(twist_mux)
 
     return ld

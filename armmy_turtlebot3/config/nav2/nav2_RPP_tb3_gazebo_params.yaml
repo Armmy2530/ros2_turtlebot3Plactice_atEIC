@@ -6,7 +6,7 @@ amcl:
     alpha3: 0.005
     alpha4: 0.005
     alpha5: 0.005
-    base_frame_id: "base_footprint"
+    base_frame_id: "base_link"
     beam_skip_distance: 0.5
     beam_skip_error_threshold: 0.9
     beam_skip_threshold: 0.3
@@ -111,6 +111,7 @@ bt_navigator_navigate_to_pose_rclcpp_node:
 
 controller_server:
   ros__parameters:
+    cmd_vel_topic: "cmd_vel_nav"
     use_sim_time: True
     controller_frequency: 20.0
     min_x_velocity_threshold: 0.001
