@@ -4,13 +4,7 @@
   <!-- <xacro:include filename="$(find turtlebot3_description)/urdf/common_properties.urdf"/> -->
 
   <xacro:arg name="use_ros2_control" default="true"/>
-
-  <xacro:if value="$(arg use_ros2_control)">
-      <xacro:include filename="ros2_control.xacro" />
-  </xacro:if>
-  <xacro:unless value="$(arg use_ros2_control)">
-      <xacro:include filename="gazebo_control.xacro" />
-  </xacro:unless>
+  <xacro:arg name="sim_mode" default="false"/>
     
   <!-- Init colour -->
   <material name="black">
@@ -391,82 +385,87 @@
     <limit lower="-1.57" upper="1.57" effort="5" velocity="1.0"/>
   </joint>
 
-  <xacro:if value="$(arg sim_mode)">
-        <ros2_control name="GazeboSystem" type="system">
-            <hardware>
-                <plugin>gazebo_ros2_control/GazeboSystem</plugin>
-            </hardware>
-            <joint name="left_wheel_joint">
-                <command_interface name="velocity">
-                    <param name="min">-10</param>
-                    <param name="max">10</param>
-                </command_interface>
-                <state_interface name="velocity"/>
-                <state_interface name="position"/>
-            </joint>
-            <joint name="right_wheel_joint">
-                <command_interface name="velocity">
-                    <param name="min">-10</param>
-                    <param name="max">10</param>
-                </command_interface>
-                <state_interface name="velocity"/>
-                <state_interface name="position"/>
-            </joint>
-        </ros2_control>
+
+  <xacro:if value="$(arg use_ros2_control)">
+    <xacro:if value="$(arg sim_mode)">
+      <ros2_control name="GazeboSystem" type="system">
+          <hardware>
+              <plugin>gazebo_ros2_control/GazeboSystem</plugin>
+          </hardware>
+          <joint name="wheel_left_joint">
+              <command_interface name="velocity">
+                  <param name="min">-10</param>
+                  <param name="max">10</param>
+              </command_interface>
+              <state_interface name="velocity"/>
+              <state_interface name="position"/>
+          </joint>
+          <joint name="wheel_right_joint">
+              <command_interface name="velocity">
+                  <param name="min">-10</param>
+                  <param name="max">10</param>
+              </command_interface>
+              <state_interface name="velocity"/>
+              <state_interface name="position"/>
+          </joint>
+      </ros2_control>
     </xacro:if>
+    <gazebo>
+      <plugin name="gazebo_ros2_control" filename="libgazebo_ros2_control.so">
+          <parameters>$(find armmy_turtlebot3)/config/ros2_controller/my_controllers.yaml</parameters>
+          <parameters>$(find armmy_turtlebot3)/config/ros2_controller/gaz_ros2_ctl_use_sim.yaml</parameters>
+      </plugin>
+    </gazebo>
+  </xacro:if>
+
+  <!-- if not using ROS2 Controller, using Gazebo control -->
+  <xacro:unless value="$(arg use_ros2_control)">
+    <!-- Gazebo drive -->
+    <gazebo>
+      <plugin name="turtlebot3_diff_drive" filename="libgazebo_ros_diff_drive.so">
+
+        <ros>
+          <!-- <namespace>/tb3</namespace> -->
+        </ros>
+
+        <update_rate>30</update_rate>
+
+        <!-- wheels -->
+        <left_joint>wheel_left_joint</left_joint>
+        <right_joint>wheel_right_joint</right_joint>
+
+        <!-- kinematics -->
+        <wheel_separation>0.160</wheel_separation>
+        <wheel_diameter>0.066</wheel_diameter>
+
+        <!-- limits -->
+        <max_wheel_torque>20</max_wheel_torque>
+        <max_wheel_acceleration>1.0</max_wheel_acceleration>
+
+        <command_topic>cmd_vel</command_topic>
+
+        <!-- output -->
+        <publish_odom>true</publish_odom>
+        <publish_odom_tf>true</publish_odom_tf>
+        <publish_wheel_tf>false</publish_wheel_tf>
+
+        <odometry_topic>odom</odometry_topic>
+        <odometry_frame>odom</odometry_frame>
+        <robot_base_frame>base_footprint</robot_base_frame>
+
+      </plugin>
+    </gazebo>
 
     <gazebo>
-        <plugin name="gazebo_ros2_control" filename="libgazebo_ros2_control.so">
-            <parameters>$(find articubot_one)/config/my_controllers.yaml</parameters>
-            <parameters>$(find articubot_one)/config/gaz_ros2_ctl_use_sim.yaml</parameters>
-        </plugin>
+      <plugin name="turtlebot3_joint_state" filename="libgazebo_ros_joint_state_publisher.so">
+        <ros>
+          <!-- <namespace>/tb3</namespace> -->
+          <remapping>~/out:=joint_states</remapping>
+        </ros>
+        <update_rate>30</update_rate>
+        <joint_name>wheel_left_joint</joint_name>
+        <joint_name>wheel_right_joint</joint_name>
+      </plugin>     
     </gazebo>
-    
-  <!-- Gazebo drive -->
-  <gazebo>
-    <plugin name="turtlebot3_diff_drive" filename="libgazebo_ros_diff_drive.so">
-
-      <ros>
-        <!-- <namespace>/tb3</namespace> -->
-      </ros>
-
-      <update_rate>30</update_rate>
-
-      <!-- wheels -->
-      <left_joint>wheel_left_joint</left_joint>
-      <right_joint>wheel_right_joint</right_joint>
-
-      <!-- kinematics -->
-      <wheel_separation>0.160</wheel_separation>
-      <wheel_diameter>0.066</wheel_diameter>
-
-      <!-- limits -->
-      <max_wheel_torque>20</max_wheel_torque>
-      <max_wheel_acceleration>1.0</max_wheel_acceleration>
-
-      <command_topic>cmd_vel</command_topic>
-
-      <!-- output -->
-      <publish_odom>true</publish_odom>
-      <publish_odom_tf>true</publish_odom_tf>
-      <publish_wheel_tf>false</publish_wheel_tf>
-
-      <odometry_topic>odom</odometry_topic>
-      <odometry_frame>odom</odometry_frame>
-      <robot_base_frame>base_footprint</robot_base_frame>
-
-    </plugin>
-  </gazebo>
-
-  <gazebo>
-    <plugin name="turtlebot3_joint_state" filename="libgazebo_ros_joint_state_publisher.so">
-      <ros>
-        <!-- <namespace>/tb3</namespace> -->
-        <remapping>~/out:=joint_states</remapping>
-      </ros>
-      <update_rate>30</update_rate>
-      <joint_name>wheel_left_joint</joint_name>
-      <joint_name>wheel_right_joint</joint_name>
-    </plugin>     
-  </gazebo>
+  </xacro:unless>
 </robot>

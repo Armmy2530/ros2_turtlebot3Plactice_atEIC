@@ -44,6 +44,7 @@ def generate_launch_description():
     gz_verbose = LaunchConfiguration('verbose', default='false')
     world_file = LaunchConfiguration('world', default=default_world)
     robot_model = LaunchConfiguration('robot_model', default=os.path.join(get_package_share_directory('armmy_turtlebot3'), 'urdf','turtlebot3_burger_custom.urdf'))
+    use_ros2_control = LaunchConfiguration('use_ros2_control', default='true')
 
     gzmodel_cmd  = SetEnvironmentVariable(
         name='GAZEBO_MODEL_PATH',
@@ -77,7 +78,8 @@ def generate_launch_description():
         ),
         launch_arguments={
             'use_sim_time': use_sim_time,
-            'robot_model': robot_model
+            'robot_model': robot_model,
+            'use_ros2_control': use_ros2_control,
         }.items()
     )
 
@@ -89,6 +91,18 @@ def generate_launch_description():
                                     '-y', y_pose,
                                     '-z','0.01'],
                         output='screen')
+    
+    diff_drive_spawner = Node(
+        package="controller_manager",
+        executable="spawner",
+        arguments=["diff_cont"],
+    )
+
+    joint_broad_spawner = Node(
+        package="controller_manager",
+        executable="spawner",
+        arguments=["joint_broad"],
+    )
 
     ld = LaunchDescription()
 
@@ -98,6 +112,8 @@ def generate_launch_description():
     ld.add_action(gzclient_cmd)
     ld.add_action(robot_state_publisher_cmd)
     ld.add_action(spawn_turtlebot_cmd)
+    ld.add_action(diff_drive_spawner)
+    ld.add_action(joint_broad_spawner)
     ld.add_action(foxgloveBridge_cmd)
 
     return ld

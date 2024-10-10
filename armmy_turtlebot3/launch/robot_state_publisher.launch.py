@@ -28,12 +28,14 @@ from launch_ros.actions import Node
 def generate_launch_description():
     use_sim_time = LaunchConfiguration('use_sim_time', default='false')
     robot_model = LaunchConfiguration('robot_model', default=os.path.join(get_package_share_directory('armmy_turtlebot3'), 'urdf','turtlebot3_burger_custom.urdf'))
+    use_ros2_control = LaunchConfiguration('use_ros2_control', default='true')
 
     declare_robot_model = DeclareLaunchArgument(
         'robot_model', default_value=os.path.join(get_package_share_directory('armmy_turtlebot3'), 'urdf','turtlebot3_burger_custom.urdf'),
         description='path of robot urdf file that going to use')
 
-    robot_desc = Command(['cat ', robot_model])
+    # robot_desc = Command(['cat ', robot_model])
+    robot_desc = Command(['xacro ', robot_model, ' use_ros2_control:=', use_ros2_control, ' sim_mode:=', use_sim_time])
 
     return LaunchDescription([
         declare_robot_model,
