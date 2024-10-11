@@ -9,6 +9,9 @@ controller_manager:
     joint_broad:
       type: joint_state_broadcaster/JointStateBroadcaster
 
+    forward_position_controller:
+      type: forward_command_controller/ForwardCommandController
+
 diff_cont:
   ros__parameters:
 
@@ -64,8 +67,11 @@ diff_cont:
     # angular.z.max_jerk: NAN
     # angular.z.min_jerk: NAN
 
-
-
-
 # joint_broad:
 #   ros__parameters:
+
+forward_position_controller:
+  ros__parameters:
+    joints:
+      - arm_joint
+    interface_name: position

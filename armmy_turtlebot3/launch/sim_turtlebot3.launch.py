@@ -45,7 +45,7 @@ def generate_launch_description():
     y_pose = LaunchConfiguration('y_pose', default='1.0')
     gz_verbose = LaunchConfiguration('verbose', default='false')
     world_file = LaunchConfiguration('world', default=default_world)
-    robot_model = LaunchConfiguration('robot_model', default=os.path.join(get_package_share_directory(package_name), 'urdf','turtlebot3_burger_custom.urdf'))
+    robot_model = LaunchConfiguration('robot_model', default=os.path.join(get_package_share_directory(package_name), 'urdf','tb3_custom','robot.urdf.xacro'))
     # robot_model = LaunchConfiguration('robot_model', default=os.path.join(get_package_share_directory(package_name), 'urdf','articubot','robot.urdf.xacro'))
     use_ros2_control = LaunchConfiguration('use_ros2_control', default='true')
 
@@ -108,6 +108,12 @@ def generate_launch_description():
         executable="spawner",
         arguments=["diff_cont"],
     )
+    
+    arm_joint_spawner = Node(
+        package="controller_manager",
+        executable="spawner",
+        arguments=["forward_position_controller"],
+    )
 
     joint_broad_spawner = Node(
         package="controller_manager",
@@ -124,6 +130,7 @@ def generate_launch_description():
     ld.add_action(gzclient_cmd)
     ld.add_action(spawn_turtlebot_cmd)
     ld.add_action(diff_drive_spawner)
+    ld.add_action(arm_joint_spawner)
     ld.add_action(joint_broad_spawner)
     ld.add_action(foxgloveBridge_cmd)
     ld.add_action(twist_mux)
