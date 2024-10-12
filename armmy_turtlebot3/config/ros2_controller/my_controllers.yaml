@@ -1,6 +1,6 @@
 controller_manager:
   ros__parameters:
-    update_rate: 50
+    update_rate: 100
     # use_sim_time: true
 
     diff_cont:
@@ -29,18 +29,16 @@ diff_cont:
 
     use_stamped_vel: false
 
-    # open_loop: false    
-
     # wheels_per_side: x
-    # wheel_separation_multiplier: x
-    # left_wheel_radius_multiplier: x
-    # right_wheel_radius_multiplier: x
+    wheel_separation_multiplier: 1.0
+    left_wheel_radius_multiplier: 1.0
+    right_wheel_radius_multiplier: 1.0
 
-    # odom_frame_id: x
-    # pose_covariance_diagonal: x
-    # twist_covariance_diagonal: x
-    # open_loop: x
-    # enable_odom_tf: x
+    odom_frame_id: odom
+    pose_covariance_diagonal : [0.001, 0.001, 0.0, 0.0, 0.0, 0.01]
+    twist_covariance_diagonal: [0.001, 0.0, 0.0, 0.0, 0.0, 0.01]
+    open_loop: true
+    # enable_odom_tf: true
 
     # cmd_vel_timeout: x
     # publish_limited_velocity: x
@@ -57,15 +55,15 @@ diff_cont:
     linear.x.max_jerk: NAN
     linear.x.min_jerk: NAN
 
-    angular.z.has_velocity_limits: true
+    # angular.z.has_velocity_limits: true
     angular.z.has_acceleration_limits: true
-    angular.z.has_jerk_limits: false
-    angular.z.max_velocity: 3.0
-    angular.z.min_velocity: -3.0
+    # angular.z.has_jerk_limits: false
+    # angular.z.max_velocity: 3.0
+    # angular.z.min_velocity: -3.0
     angular.z.max_acceleration: 1.0
     angular.z.min_acceleration: -1.0
-    angular.z.max_jerk: NAN
-    angular.z.min_jerk: NAN
+    # angular.z.max_jerk: NAN
+    # angular.z.min_jerk: NAN
 
 # joint_broad:
 #   ros__parameters:
