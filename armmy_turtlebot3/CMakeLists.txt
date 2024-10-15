@@ -31,6 +31,7 @@ install(
     map
     worlds
     urdf
+    models
   DESTINATION share/${PROJECT_NAME}/
 )
 

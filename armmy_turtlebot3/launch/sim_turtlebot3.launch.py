@@ -51,7 +51,7 @@ def generate_launch_description():
 
     gzmodel_cmd  = SetEnvironmentVariable(
         name='GAZEBO_MODEL_PATH',
-        value='/root/turtlebot3_armmy/src/armmy_turtlebot3/models'
+        value=os.path.join(get_package_share_directory(package_name),'models')
     )
 
     gzserver_cmd = IncludeLaunchDescription(
