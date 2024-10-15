@@ -1,0 +1,95 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+    <joint name="laser_joint" type="fixed">
+        <parent link="base_link" />
+        <child link="laser_frame" />
+        <origin xyz="-0.032 0 0.172" rpy="0 0 0" />
+    </joint>
+
+    <link name="laser_frame">
+        <visual>
+            <origin xyz="0 0 0.0" rpy="0 0 0" />
+            <geometry>
+                <mesh filename="package://turtlebot3_common/meshes/lds.dae"
+                    scale="0.001 0.001 0.001" />
+            </geometry>
+            <material name="dark" />
+        </visual>
+
+        <collision>
+            <origin xyz="0.015 0 -0.0065" rpy="0 0 0" />
+            <geometry>
+                <cylinder length="0.0315" radius="0.055" />
+            </geometry>
+        </collision>
+
+        <xacro:inertial_cylinder mass="0.1" length="0.0315" radius="0.055">
+            <origin xyz="0 0 0" rpy="0 0 0" />
+        </xacro:inertial_cylinder>
+    </link>
+
+
+    <!-- TB3 OG Gazebo Lidar(Laser scan) -->
+    <gazebo reference="laser_frame">
+        <sensor name="laser" type="gpu_lidar">
+            <visualize>true</visualize>
+            <pose>0 0 0 0 0 0</pose>
+            <update_rate>5</update_rate>
+            <lidar>
+                <scan>
+                    <horizontal>
+                        <samples>360</samples>
+                        <resolution>1.000000</resolution>
+                        <min_angle>0.000000</min_angle>
+                        <max_angle>6.280000</max_angle>
+                    </horizontal>
+                </scan>
+                <range>
+                    <min>0.120000</min>
+                    <max>3.5</max>
+                    <resolution>0.015000</resolution>
+                </range>
+                <noise>
+                    <type>gaussian</type>
+                    <mean>0.0</mean>
+                    <stddev>0.01</stddev>
+                </noise>
+            </lidar>
+            <topic>scan</topic>
+            <gz_frame_id>laser_frame</gz_frame_id>
+        </sensor>
+    </gazebo>
+
+    <!-- Articubot Lidar -->
+    <!-- <gazebo reference="laser_frame">
+        <material>Gazebo/Black</material>
+
+        <sensor name="laser" type="lidar">
+            <pose> 0 0 0 0 0 0 </pose>
+            <visualize>false</visualize>
+            <update_rate>10</update_rate>
+            <lidar>
+                <scan>
+                    <horizontal>
+                        <samples>360</samples>
+                        <min_angle>-3.14</min_angle>
+                        <max_angle>3.14</max_angle>
+                    </horizontal>
+                </scan>
+                <range>
+                    <min>0.3</min>
+                    <max>12</max>
+                </range>
+            </lidar>
+            <plugin name="laser_controller" filename="libgazebo_ros_lidar_sensor.so">
+                <ros>
+                    <argument>~/out:=scan</argument>
+                </ros>
+                <output_type>sensor_msgs/LaserScan</output_type>
+                <frame_name>laser_frame</frame_name>
+            </plugin>
+        </sensor>
+    </gazebo> -->
+
+</robot>

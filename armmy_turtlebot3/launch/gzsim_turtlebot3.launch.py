@@ -1,0 +1,145 @@
+#!/usr/bin/env python3
+#
+# Copyright 2019 ROBOTIS CO., LTD.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+# Authors: Joep Tool
+
+import os
+
+from ament_index_python.packages import get_package_share_directory
+from launch import LaunchDescription
+from launch.actions import IncludeLaunchDescription
+from launch.launch_description_sources import PythonLaunchDescriptionSource
+from launch.substitutions import LaunchConfiguration
+from launch_ros.actions import Node
+from launch.actions import SetEnvironmentVariable
+
+def generate_launch_description():
+    package_name = 'armmy_turtlebot3'
+
+    armmy_turtlebot3_launch_file_dir = os.path.join(get_package_share_directory(package_name), 'launch')
+
+    default_world = os.path.join(
+        get_package_share_directory(package_name),
+        'worlds',
+        'turtlebot3_world.world'
+    )
+
+    use_sim_time = LaunchConfiguration('use_sim_time', default='true')
+    x_pose = LaunchConfiguration('x_pose', default='-2.0')
+    y_pose = LaunchConfiguration('y_pose', default='1.0')
+    world_file = LaunchConfiguration('world', default=default_world)
+    robot_model = LaunchConfiguration('robot_model', default=os.path.join(get_package_share_directory(package_name), 'urdf','tb3_custom_newgz','robot.urdf.xacro'))
+    # robot_model = LaunchConfiguration('robot_model', default=os.path.join(get_package_share_directory(package_name), 'urdf','articubot','robot.urdf.xacro'))
+    use_ros2_control = LaunchConfiguration('use_ros2_control', default='true')
+
+    gzmodel_cmd  = SetEnvironmentVariable(
+        name='GZ_SIM_RESOURCE_PATH',
+        value='/root/turtlebot3_armmy/src/armmy_turtlebot3/models'
+    )
+
+    gz_system_plugin_cmd  = SetEnvironmentVariable(
+        name='GZ_SIM_SYSTEM_PLUGIN_PATH',
+        value='/opt/ros/humble/lib/'
+    )
+
+    # Include the Gazebo launch file, provided by the ros_gz_sim package
+    gazebo = IncludeLaunchDescription(
+            PythonLaunchDescriptionSource([os.path.join(
+            get_package_share_directory('ros_gz_sim'), 'launch', 'gz_sim.launch.py')]),
+            launch_arguments={'gz_args': ['-r -v4 ', world_file], 'on_exit_shutdown': 'true'}.items()
+        )
+
+    foxgloveBridge_cmd = Node(
+            package='foxglove_bridge',
+            executable='foxglove_bridge',
+            name='foxglove_bridge',
+            output='screen',
+            parameters=[{'use_sim_time': use_sim_time}],
+    )
+
+    twist_mux_params = os.path.join(get_package_share_directory(package_name),'config','twist_mux','twist_mux.yaml')
+    twist_mux = Node(
+            package="twist_mux",
+            executable="twist_mux",
+            parameters=[twist_mux_params, {'use_sim_time': True}],
+            remappings=[('/cmd_vel_out','/diff_cont/cmd_vel_unstamped')]
+        )
+    
+    robot_state_publisher_cmd = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource(
+            os.path.join(armmy_turtlebot3_launch_file_dir, 'robot_state_publisher.launch.py')
+        ),
+        launch_arguments={
+            'use_sim_time': use_sim_time,
+            'robot_model': robot_model,
+            'use_ros2_control': use_ros2_control,
+        }.items()
+    )
+    
+    # Run the spawner node from the ros_gz_sim package. The entity name doesn't really matter if you only have a single robot.
+    spawn_entity = Node(package='ros_gz_sim', executable='create',
+                        arguments=['-topic', 'robot_description',
+                                    '-name', 'my_bot',
+                                    '-x', x_pose,
+                                    '-y', y_pose,
+                                    '-z', '0.1'],
+                        output='screen')
+    
+    diff_drive_spawner = Node(
+        package="controller_manager",
+        executable="spawner",
+        arguments=["diff_cont"],
+    )
+    
+    arm_joint_spawner = Node(
+        package="controller_manager",
+        executable="spawner",
+        arguments=["forward_position_controller"],
+    )
+
+    joint_broad_spawner = Node(
+        package="controller_manager",
+        executable="spawner",
+        arguments=["joint_broad"],
+    )
+
+    bridge_params = os.path.join(get_package_share_directory(package_name),'config','new_gazebo','gz_bridge.yaml')
+    ros_gz_bridge = Node(
+        package="ros_gz_bridge",
+        executable="parameter_bridge",
+        arguments=[
+            '--ros-args',
+            '-p',
+            f'config_file:={bridge_params}',
+        ]
+    )
+
+    ld = LaunchDescription()
+
+    # Add the commands to the launch description
+    ld.add_action(gzmodel_cmd)
+    ld.add_action(gz_system_plugin_cmd)
+    ld.add_action(robot_state_publisher_cmd)
+    ld.add_action(gazebo)
+    ld.add_action(spawn_entity)
+    ld.add_action(diff_drive_spawner)
+    ld.add_action(arm_joint_spawner)
+    ld.add_action(joint_broad_spawner)
+    ld.add_action(foxgloveBridge_cmd)
+    ld.add_action(twist_mux)
+    ld.add_action(ros_gz_bridge)
+
+    return ld
