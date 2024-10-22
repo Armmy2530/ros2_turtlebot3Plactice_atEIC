@@ -13,7 +13,7 @@
             <max_wheel_torque>20</max_wheel_torque>
             <max_wheel_acceleration>1.0</max_wheel_acceleration>
 
-            <command_topic>diff_cont/cmd_vel_unstamped</command_topic>
+            <command_topic>diff_cont/cmd_vel</command_topic>
 
             <!-- Output -->
             <odometry_frame>odom</odometry_frame>

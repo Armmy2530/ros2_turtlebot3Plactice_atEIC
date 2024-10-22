@@ -12,9 +12,15 @@ setup(
     author_email='sutigran2557@gmail.com',
     description='NAV2 practice',
     license='Apache License 2.0',
+    data_files=[
+        ('share/ament_index/resource_index/packages',
+            ['resource/' + package_name]),
+        ('share/' + package_name, ['package.xml']),
+    ],
     entry_points={
         'console_scripts': [
             'example_nav_to_pose = armmy_nav2.example_nav_to_pose:main',
+            'mission_1= armmy_nav2.mission_control:main'
         ],
     },
 )

@@ -83,6 +83,14 @@ def generate_launch_description():
             remappings=[('/cmd_vel_out','/diff_cont/cmd_vel_unstamped')]
         )
     
+    twist_stamper = Node(
+            package='twist_stamper',
+            executable='twist_stamper',
+            parameters=[{'use_sim_time': use_sim_time}],
+            remappings=[('/cmd_vel_in','/diff_cont/cmd_vel_unstamped'),
+                        ('/cmd_vel_out','/diff_cont/cmd_vel')]
+         )
+    
     robot_state_publisher_cmd = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
             os.path.join(armmy_turtlebot3_launch_file_dir, 'robot_state_publisher.launch.py')
@@ -112,7 +120,7 @@ def generate_launch_description():
     arm_joint_spawner = Node(
         package="controller_manager",
         executable="spawner",
-        arguments=["forward_position_controller"],
+        arguments=["arm_joint_position_controller"],
     )
 
     joint_broad_spawner = Node(
@@ -134,5 +142,6 @@ def generate_launch_description():
     ld.add_action(joint_broad_spawner)
     ld.add_action(foxgloveBridge_cmd)
     ld.add_action(twist_mux)
+    ld.add_action(twist_stamper)
 
     return ld
