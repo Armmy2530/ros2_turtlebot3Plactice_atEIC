@@ -20,7 +20,8 @@ setup(
     entry_points={
         'console_scripts': [
             'example_nav_to_pose = armmy_nav2.example_nav_to_pose:main',
-            'mission_1= armmy_nav2.mission_control:main'
+            'mission_1 = armmy_nav2.mission_control:main',
+            'servo_test_cli = armmy_nav2.servo_test:main'
         ],
     },
 )

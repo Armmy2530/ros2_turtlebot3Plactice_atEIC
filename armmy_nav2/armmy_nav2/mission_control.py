@@ -12,15 +12,15 @@ class MissionNode(Node):
         super().__init__('mission_node')
         
         # Flag to track if AMCL has localized
-        self.amcl_active = False
+        # self.amcl_active = False
 
         # Subscribe to /amcl_pose to monitor if AMCL is active
-        self.amcl_subscriber = self.create_subscription(
-            PoseWithCovarianceStamped,
-            '/amcl_pose',
-            self.amcl_pose_callback,
-            10
-        )
+        # self.amcl_subscriber = self.create_subscription(
+        #     PoseWithCovarianceStamped,
+        #     '/amcl_pose',
+        #     self.amcl_pose_callback,
+        #     10
+        # )
 
         # Create BasicNavigator instance
         self.navigator = BasicNavigator()
@@ -29,7 +29,7 @@ class MissionNode(Node):
         self.get_logger().info('Nav2 is activated')
 
         # Publisher for servo control
-        self.servo_pub = self.create_publisher(Float64MultiArray, '/forward_position_controller/commands', 10)
+        self.servo_pub = self.create_publisher(Float64MultiArray, '/arm_joint_position_controller/commands', 10)
 
         self.init_pose = [-0.035,1.577,0.0]
         # Define goal poses (x, y, yaw)
@@ -39,7 +39,7 @@ class MissionNode(Node):
             # [3.0, 0.0, 0.0]   # goal_pose3
         ]
 
-        
+        self.set_initial_pose(*self.init_pose)
 
     def amcl_pose_callback(self, msg: PoseWithCovarianceStamped):
         """Callback to check AMCL localization status."""
