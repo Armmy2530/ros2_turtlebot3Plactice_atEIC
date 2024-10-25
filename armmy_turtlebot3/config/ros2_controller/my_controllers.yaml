@@ -80,7 +80,9 @@ arm_joint_position_controller:
     interface_name: position
     joints:
     - "arm_joint"
-    pid:
-      p: 0.1  # Proportional gain
-      i: 0.01   # Integral gain
-      d: 0.0   # Derivative gain
+
+gazebo_ros2_control:
+  ros__parameters:
+    pid_gains:
+      position:
+        arm_joint: {kp:  10.0, kd: 0.0, ki:  0.1, max_integral_error: 10000.0}

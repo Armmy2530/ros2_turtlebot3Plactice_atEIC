@@ -28,6 +28,8 @@ class MissionNode(Node):
         self.navigator.waitUntilNav2Active()
         self.get_logger().info('Nav2 is activated')
 
+        # self.set_initial_pose(*self.init_pose)
+
         # Publisher for servo control
         self.servo_pub = self.create_publisher(Float64MultiArray, '/arm_joint_position_controller/commands', 10)
 
@@ -35,11 +37,9 @@ class MissionNode(Node):
         # Define goal poses (x, y, yaw)
         self.goal_poses = [ 
             [3.80,-0.03,0.0],  # goal_pose1
-            # [2.0, 0.0, 0.0],  # goal_pose2
-            # [3.0, 0.0, 0.0]   # goal_pose3
+            [3.81, 1.09, 90.0],  # goal_pose2
+            [1.41, 2.33, -90.0]   # goal_pose3
         ]
-
-        self.set_initial_pose(*self.init_pose)
 
     def amcl_pose_callback(self, msg: PoseWithCovarianceStamped):
         """Callback to check AMCL localization status."""
@@ -73,6 +73,13 @@ class MissionNode(Node):
 
         return q
     
+    def quaternion_to_yaw(self, q):
+        # Extract yaw from quaternion
+        yaw = math.atan2(2.0 * (q.w * q.z + q.x * q.y),
+                        1.0 - 2.0 * (q.y * q.y + q.z * q.z))
+        # Convert to degrees if you prefer
+        return math.degrees(yaw)
+    
     def set_initial_pose(self,x=-0.035,y=1.577,yaw=0.0):
         initial_pose = PoseStamped()
 
@@ -81,7 +88,8 @@ class MissionNode(Node):
         initial_pose.pose.position.x = -x
         initial_pose.pose.position.y = y
 
-        q = self.quaternion_from_euler(0, 0, yaw)
+        yaw_rad = math.radians(yaw)
+        q = self.quaternion_from_euler(0, 0, yaw_rad)
 
         initial_pose.pose.orientation.w = q[0]
         initial_pose.pose.orientation.x = q[1]
@@ -95,8 +103,9 @@ class MissionNode(Node):
         goal_pose.header.frame_id = 'map'
         goal_pose.pose.position.x = x
         goal_pose.pose.position.y = y
-
-        q = self.quaternion_from_euler(0, 0, yaw)
+        
+        yaw_rad = math.radians(yaw)
+        q = self.quaternion_from_euler(0, 0, yaw_rad)
 
         goal_pose.pose.orientation.w = q[0]
         goal_pose.pose.orientation.x = q[1]
@@ -110,7 +119,14 @@ class MissionNode(Node):
         while not self.navigator.isTaskComplete():
             feedback = self.navigator.getFeedback()
             if feedback:
-                self.get_logger().info(f'Current robot position: {feedback.current_pose}')
+                # self.get_logger().info(f'Current robot position: {feedback.current_pose}')
+                # When logging the position:
+                yaw = self.quaternion_to_yaw(feedback.current_pose.pose.orientation)
+                self.get_logger().info(
+                    f'Robot position: x: {feedback.current_pose.pose.position.x:.2f}, '
+                    f'y: {feedback.current_pose.pose.position.y:.2f}, '
+                    f'yaw: {yaw:.2f}°'
+                )
 
         result = self.navigator.getResult()
 
@@ -144,9 +160,11 @@ class MissionNode(Node):
 
     def execute_mission(self):
         self.goAndDo(self.goal_poses[0], self.control_servo)
-        # self.goAndDo(self.goals[1], self.control_servo)
-        # self.goAndDo(self.goals[2], self.control_servo)
+        self.goAndDo(self.goal_poses[1], self.control_servo)
+        self.goAndDo(self.goal_poses[2], self.control_servo)
 
+        self.get_logger().info(f'Finish Mission')
+        return True
     # def execute_mission(self):
     #     for goal in self.goal_poses:
     #         self.get_logger().info(f'Navigating to: {goal}')
@@ -162,7 +180,6 @@ def main(args=None):
     # Execute the mission
     node.execute_mission()
 
-    rclpy.spin(node)
     node.destroy_node()
     rclpy.shutdown()
 

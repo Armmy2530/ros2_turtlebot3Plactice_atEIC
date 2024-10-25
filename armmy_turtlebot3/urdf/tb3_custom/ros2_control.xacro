@@ -65,6 +65,11 @@
 
     <gazebo>
         <plugin name="gazebo_ros2_control" filename="libgazebo_ros2_control.so">
+            <ros>
+                <argument>--ros-args</argument>
+                <argument>--params-file</argument>
+                <argument>$(find armmy_turtlebot3)/config/ros2_controller/my_controllers.yaml</argument>
+            </ros>
             <parameters>$(find armmy_turtlebot3)/config/ros2_controller/my_controllers.yaml</parameters>
             <parameters>$(find armmy_turtlebot3)/config/ros2_controller/gaz_ros2_ctl_use_sim.yaml</parameters>
         </plugin>
