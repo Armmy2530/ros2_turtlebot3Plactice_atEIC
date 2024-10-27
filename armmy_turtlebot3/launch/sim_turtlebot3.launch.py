@@ -20,11 +20,12 @@ import os
 
 from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription
-from launch.actions import IncludeLaunchDescription
+from launch.actions import IncludeLaunchDescription, RegisterEventHandler
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.substitutions import LaunchConfiguration
 from launch_ros.actions import Node
 from launch.actions import SetEnvironmentVariable
+from launch.event_handlers import OnProcessStart
 
 def generate_launch_description():
     package_name = 'armmy_turtlebot3'
@@ -144,4 +145,26 @@ def generate_launch_description():
     ld.add_action(twist_mux)
     ld.add_action(twist_stamper)
 
+    # # Add the commands to the launch description
+    # ld.add_action(gzmodel_cmd)
+    # ld.add_action(gzserver_cmd)
+    # ld.add_action(gzclient_cmd)
+    # ld.add_action(robot_state_publisher_cmd)
+
+    # # Add a delay between Gazebo server start and spawning the robot
+    # spawn_event = RegisterEventHandler(
+    #     event_handler=OnProcessStart(
+    #         target_action=gzserver_cmd,
+    #         on_start=[
+    #             spawn_turtlebot_cmd,
+    #             diff_drive_spawner,
+    #             arm_joint_spawner,
+    #             joint_broad_spawner,
+    #             foxgloveBridge_cmd,
+    #             twist_mux,
+    #             twist_stamper,
+    #         ]
+    #     )
+    # )
+    # ld.add_action(spawn_event)
     return ld

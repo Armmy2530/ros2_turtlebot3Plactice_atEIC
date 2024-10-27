@@ -71,7 +71,7 @@
                 <argument>$(find armmy_turtlebot3)/config/ros2_controller/my_controllers.yaml</argument>
             </ros>
             <parameters>$(find armmy_turtlebot3)/config/ros2_controller/my_controllers.yaml</parameters>
-            <parameters>$(find armmy_turtlebot3)/config/ros2_controller/gaz_ros2_ctl_use_sim.yaml</parameters>
+            <!-- <parameters>$(find armmy_turtlebot3)/config/ros2_controller/gaz_ros2_ctl_use_sim.yaml</parameters> -->
         </plugin>
     </gazebo>
 
