@@ -26,7 +26,6 @@ from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.substitutions import LaunchConfiguration
 from launch_ros.actions import Node
 from launch.actions import SetEnvironmentVariable
-from launch.event_handlers import OnProcessStart
 
 def generate_launch_description():
     package_name = 'armmy_turtlebot3'
@@ -66,7 +65,7 @@ def generate_launch_description():
     
     gzmodel_cmd  = SetEnvironmentVariable(
         name='GAZEBO_MODEL_PATH',
-        value=os.path.join(get_package_share_directory(package_name),'models')
+        value=os.path.join(get_package_share_directory(package_name),'..') # Back one step for loading model in URDF File
     )
 
     gzserver_cmd = IncludeLaunchDescription(
