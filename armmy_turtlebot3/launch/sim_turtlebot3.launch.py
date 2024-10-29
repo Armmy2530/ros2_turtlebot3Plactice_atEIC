@@ -20,7 +20,8 @@ import os
 
 from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription
-from launch.actions import IncludeLaunchDescription, RegisterEventHandler
+from launch.conditions import IfCondition
+from launch.actions import IncludeLaunchDescription, DeclareLaunchArgument
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.substitutions import LaunchConfiguration
 from launch_ros.actions import Node
@@ -30,7 +31,7 @@ from launch.event_handlers import OnProcessStart
 def generate_launch_description():
     package_name = 'armmy_turtlebot3'
 
-    armmy_turtlebot3_launch_file_dir = os.path.join(get_package_share_directory(package_name), 'launch')
+    package_dir = os.path.join(get_package_share_directory(package_name))
     pkg_gazebo_ros = get_package_share_directory('gazebo_ros')
 
     default_world = os.path.join(
@@ -49,7 +50,20 @@ def generate_launch_description():
     robot_model = LaunchConfiguration('robot_model', default=os.path.join(get_package_share_directory(package_name), 'urdf','tb3_custom','robot.urdf.xacro'))
     # robot_model = LaunchConfiguration('robot_model', default=os.path.join(get_package_share_directory(package_name), 'urdf','articubot','robot.urdf.xacro'))
     use_ros2_control = LaunchConfiguration('use_ros2_control', default='true')
-
+    rviz_config_file = LaunchConfiguration('rviz_config_file')
+    use_rviz = LaunchConfiguration('use_rviz')
+    
+    declare_rviz_config_file_cmd = DeclareLaunchArgument(
+        'rviz_config_file',
+        default_value=os.path.join(
+            package_dir, 'rviz', 'turtlebot3_rviz.rviz'),
+        description='Full path to the RVIZ config file to use')
+    
+    declare_use_rviz_cmd = DeclareLaunchArgument(
+        'use_rviz',
+        default_value='True',
+        description='Whether to start RVIZ')
+    
     gzmodel_cmd  = SetEnvironmentVariable(
         name='GAZEBO_MODEL_PATH',
         value=os.path.join(get_package_share_directory(package_name),'models')
@@ -94,7 +108,7 @@ def generate_launch_description():
     
     robot_state_publisher_cmd = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
-            os.path.join(armmy_turtlebot3_launch_file_dir, 'robot_state_publisher.launch.py')
+            os.path.join(package_dir, 'launch', 'robot_state_publisher.launch.py')
         ),
         launch_arguments={
             'use_sim_time': use_sim_time,
@@ -130,6 +144,12 @@ def generate_launch_description():
         arguments=["joint_broad"],
     )
 
+    rviz_cmd = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource(
+            os.path.join(package_dir, 'launch', 'rviz.launch.py')),
+        condition=IfCondition(use_rviz),
+        launch_arguments={'rviz_config': rviz_config_file}.items())
+
     ld = LaunchDescription()
 
     # Add the commands to the launch description
@@ -144,27 +164,8 @@ def generate_launch_description():
     ld.add_action(foxgloveBridge_cmd)
     ld.add_action(twist_mux)
     ld.add_action(twist_stamper)
-
-    # # Add the commands to the launch description
-    # ld.add_action(gzmodel_cmd)
-    # ld.add_action(gzserver_cmd)
-    # ld.add_action(gzclient_cmd)
-    # ld.add_action(robot_state_publisher_cmd)
-
-    # # Add a delay between Gazebo server start and spawning the robot
-    # spawn_event = RegisterEventHandler(
-    #     event_handler=OnProcessStart(
-    #         target_action=gzserver_cmd,
-    #         on_start=[
-    #             spawn_turtlebot_cmd,
-    #             diff_drive_spawner,
-    #             arm_joint_spawner,
-    #             joint_broad_spawner,
-    #             foxgloveBridge_cmd,
-    #             twist_mux,
-    #             twist_stamper,
-    #         ]
-    #     )
-    # )
-    # ld.add_action(spawn_event)
+    ld.add_action(declare_rviz_config_file_cmd)
+    ld.add_action(declare_use_rviz_cmd)
+    ld.add_action(rviz_cmd)
+    
     return ld
