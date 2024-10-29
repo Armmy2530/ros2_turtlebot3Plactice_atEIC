@@ -11,7 +11,7 @@
         <visual>
             <origin xyz="0 0 0.0" rpy="0 0 0" />
             <geometry>
-                <mesh filename="package://turtlebot3_common/meshes/lds.dae"
+                <mesh filename="package://armmy_turtlebot3/models/turtlebot3_common//meshes/lds.dae"
                     scale="0.001 0.001 0.001" />
             </geometry>
             <material name="dark" />

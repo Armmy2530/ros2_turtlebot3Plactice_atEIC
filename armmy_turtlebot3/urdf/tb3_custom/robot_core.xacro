@@ -72,7 +72,7 @@
             <origin xyz="-0.032 0 0.0" rpy="0 0 0" />
             <geometry>
                 <mesh
-                    filename="package://turtlebot3_common/meshes/burger_base.dae"
+                    filename="package://armmy_turtlebot3/models/turtlebot3_common/meshes/burger_base.dae"
                     scale="0.001 0.001 0.001" />
             </geometry>
             <material name="light_black" />
@@ -103,7 +103,7 @@
             <origin xyz="0 0 0" rpy="1.57 0 0" />
             <geometry>
                 <mesh
-                    filename="package://turtlebot3_common/meshes/tire.dae"
+                    filename="package://armmy_turtlebot3/models/turtlebot3_common/meshes/tire.dae"
                     scale="0.001 0.001 0.001" />
             </geometry>
             <material name="dark" />
@@ -134,7 +134,7 @@
             <origin xyz="0 0 0" rpy="1.57 0 0" />
             <geometry>
                 <mesh
-                    filename="package://turtlebot3_common/meshes/tire.dae"
+                    filename="package://armmy_turtlebot3/models/turtlebot3_common/meshes/tire.dae"
                     scale="0.001 0.001 0.001" />
             </geometry>
             <material name="dark" />
