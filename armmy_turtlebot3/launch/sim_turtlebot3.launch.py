@@ -143,6 +143,13 @@ def generate_launch_description():
         arguments=["joint_broad"],
     )
 
+    odom_bridge_cmd = Node(
+        package="armmy_nodebridge",
+        executable="odom_bridge",
+        name='topic_bridge',
+        output='screen',
+    )
+
     rviz_cmd = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
             os.path.join(package_dir, 'launch', 'rviz.launch.py')),
@@ -160,6 +167,7 @@ def generate_launch_description():
     ld.add_action(diff_drive_spawner)
     ld.add_action(arm_joint_spawner)
     ld.add_action(joint_broad_spawner)
+    ld.add_action(odom_bridge_cmd)
     ld.add_action(foxgloveBridge_cmd)
     ld.add_action(twist_mux)
     ld.add_action(twist_stamper)

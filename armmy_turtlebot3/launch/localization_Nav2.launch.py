@@ -48,7 +48,7 @@ def generate_launch_description():
             'use_sim_time': use_sim_time,
             'map': map_yaml_file,
             'params_file' : nav2_config,
-        }.items()
+        }.items(),
     )
 
     # Include navigation launch file
