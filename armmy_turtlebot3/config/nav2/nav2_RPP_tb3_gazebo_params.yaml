@@ -1,11 +1,11 @@
 amcl:
   ros__parameters:
     use_sim_time: True
-    alpha1: 0.2
-    alpha2: 0.2
-    alpha3: 0.2
-    alpha4: 0.2
-    alpha5: 0.2
+    alpha1: 0.05
+    alpha2: 0.05
+    alpha3: 0.05
+    alpha4: 0.05
+    alpha5: 0.05
     base_frame_id: "base_link"
     beam_skip_distance: 0.5
     beam_skip_error_threshold: 0.9
@@ -144,9 +144,9 @@ controller_server:
       plugin: "nav2_regulated_pure_pursuit_controller::RegulatedPurePursuitController"
       desired_linear_vel: 0.26
       lookahead_dist: 0.6
+      lookahead_time: 1.0
       max_lookahead_dist: 0.9
       min_lookahead_dist: 0.3
-      lookahead_time: 1.5
       rotate_to_heading_angular_vel: 0.6
       transform_tolerance: 0.1
       use_velocity_scaled_lookahead_dist: false
@@ -162,7 +162,7 @@ controller_server:
       regulated_linear_scaling_min_speed: 0.25
       use_rotate_to_heading: true
       allow_reversing: false
-      rotate_to_heading_min_angle: 0.3
+      rotate_to_heading_min_angle: 0.6
       max_angular_accel: 3.2
       max_robot_pose_search_dist: 10.0
 
