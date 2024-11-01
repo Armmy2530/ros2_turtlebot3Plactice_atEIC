@@ -20,6 +20,7 @@ setup(
     entry_points={
         'console_scripts': [
             'odom_bridge = armmy_nodebridge.odom_bridge:main',
+            'delay_test = armmy_nodebridge.test_delay:main',
         ],
     },
 )
