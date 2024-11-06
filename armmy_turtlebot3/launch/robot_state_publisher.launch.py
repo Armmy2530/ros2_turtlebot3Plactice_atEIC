@@ -22,6 +22,7 @@ from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription
 from launch.actions import DeclareLaunchArgument
 from launch.substitutions import LaunchConfiguration, Command
+from launch_ros.parameter_descriptions import ParameterValue
 from launch_ros.actions import Node
 
 
@@ -31,12 +32,14 @@ def generate_launch_description():
     use_ros2_control = LaunchConfiguration('use_ros2_control', default='true')
 
     declare_robot_model = DeclareLaunchArgument(
-        'robot_model', default_value=os.path.join(get_package_share_directory('armmy_turtlebot3'), 'urdf','tb3_custom','robot.urdf.xarco'),
+        'robot_model', default_value=os.path.join(get_package_share_directory('armmy_turtlebot3'), 'urdf','tb3_custom','robot.urdf.xacro'),
         description='path of robot urdf file that going to use')
 
-    # robot_desc = Command(['cat ', robot_model])
-    robot_desc = Command(['xacro ', robot_model, ' use_ros2_control:=', use_ros2_control, ' sim_mode:=', use_sim_time])
-
+    robot_desc = ParameterValue(
+        Command(['xacro ', robot_model, ' use_ros2_control:=', use_ros2_control, ' sim_mode:=', use_sim_time]),
+        value_type=str
+    )
+    
     return LaunchDescription([
         declare_robot_model,
 
@@ -52,7 +55,7 @@ def generate_launch_description():
             output='screen',
             parameters=[{
                 'use_sim_time': use_sim_time,
-                'robot_description': robot_desc
+                'robot_description': robot_desc # use robot xacro path 
             }],
         ),
     ])
