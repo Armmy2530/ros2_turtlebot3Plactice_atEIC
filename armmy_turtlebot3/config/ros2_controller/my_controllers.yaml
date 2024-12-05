@@ -69,12 +69,6 @@ diff_cont:
 # joint_broad:
 #   ros__parameters:
 
-# arm_joint_position_controller:
-#   ros__parameters:
-#     joints:
-#       - arm_joint
-#     interface_name: position
-
 arm_joint_position_controller:
   ros__parameters:
     interface_name: position

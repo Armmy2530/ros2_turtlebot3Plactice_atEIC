@@ -1,0 +1,148 @@
+<?xml version="1.0"?>
+<robot name="omni_robot" xmlns:xacro="http://ros.org/wiki/xacro">
+
+  <xacro:property name="M_PI" value="3.14159274" />
+
+  <xacro:arg name="use_ros2_control" default="true" />
+  <xacro:arg name="sim_mode" default="false" />
+
+  <xacro:include filename="$(find armmy_omnibot)/urdf/base/base.urdf.xacro" />
+  <xacro:include filename="$(find armmy_omnibot)/urdf/omni_wheel/omni_wheel.urdf.xacro" />
+  <xacro:include filename="$(find armmy_omnibot)/urdf/roller/roller.urdf.xacro" />
+  <xacro:include filename="$(find armmy_omnibot)/urdf/lidar/lidar.urdf.xacro" />
+
+  <!-- =============== Link & Joint =============== -->
+  <!-- Base -->
+  <link name="base_footprint" />
+  <xacro:base_v0 parent="base_footprint">
+    <origin xyz="0 0 0" rpy="0 0 0" />
+  </xacro:base_v0>
+
+  <!-- Wheel -->
+  <!-- 1st wheel -->
+  <xacro:wheel_v0 prefix="first" parent="base_link">
+    <origin xyz="-0.0 0.038375 -0.0" rpy="0 0 0" />
+    <axis xyz="0.0 1.0 0.0" />
+  </xacro:wheel_v0>
+
+  <xacro:roller_v0 prefix="r1_F" parent="first_wheel_link">
+    <origin xyz="0.01275 0.004625 -0.00925" rpy="0 0 0" />
+    <axis xyz="0.0 0.0 -1.0" />
+  </xacro:roller_v0>
+
+  <xacro:roller_v0 prefix="r2_F" parent="first_wheel_link">
+    <origin xyz="-0.00925 0.004625 -0.01275" rpy="0 ${M_PI/2} 0" />
+    <axis xyz="0.0 0.0 -1.0" />
+  </xacro:roller_v0>
+
+  <xacro:roller_v0 prefix="r3_F" parent="first_wheel_link">
+    <origin xyz="-0.01275 0.004625 0.00925" rpy="0 ${M_PI} 0" />
+    <axis xyz="0.0 0.0 -1.0" />
+  </xacro:roller_v0>
+
+  <xacro:roller_v0 prefix="r4_F" parent="first_wheel_link">
+    <origin xyz="0.00925 0.004625 0.01275" rpy="0 ${3*M_PI/2} 0" />
+    <axis xyz="0.0 0.0 -1.0" />
+  </xacro:roller_v0>
+
+
+  <xacro:roller_v0 prefix="r5_F" parent="first_wheel_link">
+    <origin xyz="0.015556 0.013875 -0.002475" rpy="0 ${-3*M_PI/4} 0" />
+    <axis xyz="0.0 0.0 -1.0" />
+  </xacro:roller_v0>
+
+  <xacro:roller_v0 prefix="r6_F" parent="first_wheel_link">
+    <origin xyz="-0.002475 0.013875 -0.015556" rpy="0 ${-M_PI/4} 0" />
+    <axis xyz="0.0 0.0 -1.0" />
+  </xacro:roller_v0>
+
+  <xacro:roller_v0 prefix="r7_F" parent="first_wheel_link">
+    <origin xyz="-0.015556 0.013875 0.002475" rpy="0 ${M_PI/4} 0" />
+    <axis xyz="0.0 0.0 -1.0" />
+  </xacro:roller_v0>
+
+  <xacro:roller_v0 prefix="r8_F" parent="first_wheel_link">
+    <origin xyz="0.002475 0.013875 0.015556" rpy="0 ${-5*M_PI/4} 0" />
+    <axis xyz="0.0 0.0 -1.0" />
+  </xacro:roller_v0>
+
+  <!-- 2nd wheel -->
+
+  <!-- 3rd wheel -->
+
+  <!-- 4th wheel -->
+
+  <!-- lidar sensor -->
+  <xacro:lidar_v0 prefix="front" parent="base_link">
+    <origin xyz="0 0 0.1395" />
+  </xacro:lidar_v0>
+
+  <!-- ===============  Transmission =============== -->
+  <xacro:wheel_trans_v0 prefix="first" />
+  <xacro:wheel_trans_v0 prefix="second" />
+  <xacro:wheel_trans_v0 prefix="third" />
+  <xacro:wheel_trans_v0 prefix="fourth" />
+
+  <!-- =============== Gazebo =============== -->
+  <!-- <gazebo>
+    <plugin name="gazebo_ros_control" filename="libgazebo_ros_control.so" />
+  </gazebo> -->
+
+  <!-- Base -->
+  <xacro:base_gazebo_v0 />
+
+  <!-- Wheel -->
+  <xacro:wheel_gazebo_v0 prefix="first" />
+  <xacro:wheel_gazebo_v0 prefix="second" />
+  <xacro:wheel_gazebo_v0 prefix="third" />
+  <xacro:wheel_gazebo_v0 prefix="fourth" />
+
+  <!-- lidar sensor -->
+  <xacro:lidar_gazebo_v0 prefix="front" min_rad="-3.14" max_rad="3.14" min_range="0.1"
+    max_range="10" />
+
+  <ros2_control name="GazeboSystem" type="system">
+    <hardware>
+      <plugin>gazebo_ros2_control/GazeboSystem</plugin>
+    </hardware>
+
+    <joint name="first_wheel_joint">
+      <command_interface name="velocity">
+        <param name="min">-3.14</param>
+        <param name="max">3.14</param>
+      </command_interface>
+      <state_interface name="velocity" />
+    </joint>
+
+    <joint name="second_wheel_joint">
+      <command_interface name="velocity">
+        <param name="min">-3.14</param>
+        <param name="max">3.14</param>
+      </command_interface>
+      <state_interface name="velocity" />
+    </joint>
+
+    <joint name="third_wheel_joint">
+      <command_interface name="velocity">
+        <param name="min">-3.14</param>
+        <param name="max">3.14</param>
+      </command_interface>
+      <state_interface name="velocity" />
+    </joint>
+
+    <joint name="fourth_wheel_joint">
+      <command_interface name="velocity">
+        <param name="min">-3.14</param>
+        <param name="max">3.14</param>
+      </command_interface>
+      <state_interface name="velocity" />
+    </joint>
+  </ros2_control>
+
+  <gazebo>
+    <plugin name="gazebo_ros2_control" filename="libgazebo_ros2_control.so">
+      <parameters>
+        /home/armmy2530/Documents/ros2/EIC_Turtlebot3/src/omni_navigation/src/gazebo_simulation/models/rs_robot/config/controllers.yaml</parameters>
+    </plugin>
+  </gazebo>
+</robot>

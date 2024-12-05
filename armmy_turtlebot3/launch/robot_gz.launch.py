@@ -43,7 +43,6 @@ def generate_launch_description():
     gz_verbose = LaunchConfiguration('verbose', default='false')
     world_file = LaunchConfiguration('world', default=default_world)
     robot_model = LaunchConfiguration('robot_model', default=os.path.join(get_package_share_directory(package_name), 'urdf','tb3_custom','robot.urdf.xacro'))
-    # robot_model = LaunchConfiguration('robot_model', default=os.path.join(get_package_share_directory(package_name), 'urdf','articubot','robot.urdf.xacro'))
     use_ros2_control = LaunchConfiguration('use_ros2_control', default='true')
     use_sim_time = LaunchConfiguration('use_sim_time', default='true')
     x_pose = LaunchConfiguration('x_pose', default='-2.0')
@@ -53,7 +52,8 @@ def generate_launch_description():
     gzmodel_cmd  = SetEnvironmentVariable(
         name='GAZEBO_MODEL_PATH',
         # value=os.path.join(get_package_share_directory(package_name),'..') # Back one step for loading model in URDF File
-        value=os.path.join(get_package_share_directory('omni_robot_description'),'..') # Back one step for loading model in URDF File
+        # value=os.path.join(get_package_share_directory('omni_robot_description'),'..') # Back one step for loading model in URDF File
+        value=os.path.join(get_package_share_directory('armmy_omnibot'),'..') # Back one step for loading model in URDF File
     )
 
     gzserver_cmd = IncludeLaunchDescription(
@@ -89,6 +89,17 @@ def generate_launch_description():
                                     '-z','0.01'],
                         output='screen')
     
+    joint_broad_spawner = Node(
+        package="controller_manager",
+        executable="spawner",
+        arguments=["joint_broad"],
+    )
+
+    forward_position_controller = Node(
+        package="controller_manager",
+        executable="spawner",
+        arguments=["forward_velocity_controller"],
+    )
 
     ld = LaunchDescription()
 
@@ -98,5 +109,7 @@ def generate_launch_description():
     ld.add_action(gzclient_cmd)
     ld.add_action(robot_state_publisher_cmd)
     ld.add_action(spawn_turtlebot_cmd)
+    ld.add_action(joint_broad_spawner)
+    ld.add_action(forward_position_controller)
 
     return ld
