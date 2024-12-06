@@ -17,11 +17,11 @@ def fk_omni(FR, BR, FL, BL):
     # Convert wheel velocities to linear and angular velocities
     vx = (FR - BR + FL - BL) / 4
     vy = (-FR - BR + FL + BL) / 4
-    omega = (-FR + BR - FL + BL) / (4 * l)
+    omega = (-FR - BR - FL - BL) / (4 * l)
     return vx, vy, omega
 
 def visualize_fk(FR, BR, FL, BL):
-    # Get the FK results
+    # Get the FK resultsq
     vx, vy, omega = fk_omni(FR, BR, FL, BL)
     v_total = math.sqrt(vx**2 + vy**2)
     
@@ -66,6 +66,15 @@ def visualize_fk(FR, BR, FL, BL):
     plt.legend()
     plt.show()
 
+def OmegaToVel(src):
+    ans = []
+    for i in src:
+        ans.append(i * wheel_radius)
+    return ans  
+
+wheel_radius = 0.0175
+wheel_offset = 0.038375
+
 # Example usage
 # FR, BR, FL, BL = (1,-1,-1,1) #FORWARD
 # FR, BR, FL, BL = (-1,-1,-1,-1) # RIGHT
@@ -73,6 +82,7 @@ def visualize_fk(FR, BR, FL, BL):
 # FR, BR, FL, BL = (-1, 1, -1, 1) # Rotatation CW
 
 # FR, BR, FL, BL = (0,0,0,1)
+# FR, BR, FL, BL = OmegaToVel( [0.00, -57.14, 57.14, 0.00])
 # visualize_fk(FR, BR, FL, BL)
 
 # print(f"1,0,0 : {ik_omni4wheel_arm(1,0,0)}")
@@ -80,9 +90,9 @@ def visualize_fk(FR, BR, FL, BL):
 # print(f"1,1,0 : {ik_omni4wheel_arm(1,1,0)}")
 # print(f"0,0,1 : {ik_omni4wheel_arm(0,0,1)}")
 
-# ans = ik_omni4wheel_arm(-1 ,0 , 0)
+ans = ik_omni4wheel_arm(-1 ,0 , 0)
 # ans = ik_omni4wheel_arm(0 ,1 , 0)
-ans = ik_omni4wheel_arm(0 ,0 , 1)
+# ans = ik_omni4wheel_arm(0 ,0 , 1)
 # ans = ik_omni4wheel_arm(1 ,1 , 1)
 
 print(ans)

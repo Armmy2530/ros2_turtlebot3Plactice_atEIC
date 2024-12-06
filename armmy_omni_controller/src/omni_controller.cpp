@@ -41,12 +41,12 @@ private:
 
     RCLCPP_INFO(
         this->get_logger(),
-        "Received cmd_vel: linear_x=%.2f, linear_y=%.2f, angular_z=%.2f | Wheel Speed= %.2f %.2f %.2f %.2f",
+        "\nReceived cmd_vel:%.2f, %.2f, %.2f \nWheel Speed= %.2f %.2f %.2f %.2f",
         msg->linear.x, msg->linear.y, msg->angular.z, wheel_fr, wheel_br, wheel_fl, wheel_bl);
 
     // Publish wheel velocities
     std_msgs::msg::Float64MultiArray wheel_vel_msg;
-    wheel_vel_msg.data = {wheel_fl, wheel_fr, wheel_bl, wheel_br};
+    wheel_vel_msg.data = {wheel_fr, wheel_br, wheel_fl, wheel_bl};
     forward_velocity_publisher->publish(wheel_vel_msg);
   }
 

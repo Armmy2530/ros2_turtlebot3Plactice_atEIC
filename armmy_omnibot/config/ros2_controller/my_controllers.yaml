@@ -12,10 +12,10 @@ controller_manager:
 forward_velocity_controller:
   ros__parameters:
     joints:
-      - first_wheel_joint
-      - second_wheel_joint
       - third_wheel_joint
+      - second_wheel_joint
       - fourth_wheel_joint
+      - first_wheel_joint
     interface_name: velocity
     command_interfaces:
       - velocity
