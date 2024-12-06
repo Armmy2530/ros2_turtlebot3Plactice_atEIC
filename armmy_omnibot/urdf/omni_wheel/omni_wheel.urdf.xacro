@@ -3,6 +3,11 @@
 
   <xacro:include filename="$(find armmy_omnibot)/urdf/omni_wheel/omni_wheel.transmission.xacro"/>
   <xacro:include filename="$(find armmy_omnibot)/urdf/omni_wheel/omni_wheel.gazebo.xacro"/>
+  <xacro:include filename="$(find armmy_omnibot)/urdf/inertial_macros.xacro" />
+  
+  <xacro:property name="wheel_thickness" value="0.0185" />
+  <xacro:property name="wheel_radian" value="0.0175" />
+  <xacro:property name="wheel_mass" value="0.05" />
   
   <xacro:macro name="wheel_v0" params="prefix parent *joint_origin *joint_axis">
 	<joint name="${prefix}_wheel_joint" type="continuous">
@@ -24,11 +29,18 @@
           <mesh filename="package://armmy_omnibot/meshes/omni_wheel/wheel_base.stl" scale="0.001 0.001 0.001" />
 		</geometry>
 	  </collision>
-	  <inertial>
+
+    <xacro:inertial_cylinder mass="${wheel_mass}" length="${wheel_thickness}"
+        radius="${wheel_radian}">
+        <origin xyz="0 ${wheel_thickness/2} 0" rpy="1.570796327 0 0" />
+      </xacro:inertial_cylinder>
+
+	  <!-- <inertial>
 		<origin xyz="0.0 -0.0 -0.0"/>
 		<mass value="0.25"/>
 		<inertia ixx="0.00031" ixy="0" ixz="0" iyy="0.0005" iyz="0" izz="0.00031"/>
-	  </inertial>
+	  </inertial> -->
+
           <surface>
             <friction>
               <ode>
