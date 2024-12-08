@@ -14,6 +14,7 @@ find_package(rclcpp REQUIRED)
 find_package(std_msgs REQUIRED)
 find_package(nav_msgs REQUIRED)
 find_package(sensor_msgs REQUIRED)
+find_package(control_msgs REQUIRED)
 find_package(geometry_msgs REQUIRED)
 
 # Link libraries
@@ -23,6 +24,7 @@ ament_target_dependencies(omni_controller
   nav_msgs
   sensor_msgs
   geometry_msgs
+  control_msgs
 )
 
 if(BUILD_TESTING)

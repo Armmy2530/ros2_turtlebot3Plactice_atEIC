@@ -79,18 +79,21 @@ def setup_plot(ax):
 
 def update_plot(frame, node, quivers, texts, vx_arrow, vy_arrow, total_velocity_arrow, omega_text, wheel_positions, vel_texts):
     vx, vy, omega = fk_omni(node.FR, node.BR, node.FL, node.BL)
+
+    up_scale_arrow=5
+
     for i, (label, (x, y, angle)) in enumerate(wheel_positions.items()):
         speed = [node.FR, node.BR, node.FL, node.BL][i]
         length_x = speed * math.cos(angle * DegToRad)
         length_y = speed * math.sin(angle * DegToRad)
-        quivers[i].set_UVC(length_x, length_y)
+        quivers[i].set_UVC(length_x*up_scale_arrow, length_y*up_scale_arrow)
         quivers[i].set_offsets([x, y])
         texts[i].set_position((x * 1.2, y * 1.2))
         texts[i].set_text(f"{speed:.2f}")
 
-    vx_arrow.set_UVC(vx, 0)
-    vy_arrow.set_UVC(0, vy)
-    total_velocity_arrow.set_UVC(vx, vy)
+    vx_arrow.set_UVC(vx*up_scale_arrow, 0)
+    vy_arrow.set_UVC(0, vy*up_scale_arrow)
+    total_velocity_arrow.set_UVC(vx*up_scale_arrow, vy*up_scale_arrow)
 
     vel_texts[0].set_text(f"vx: {vx:.2f}")
     vel_texts[0].set_position((-3, -5.0)) 
