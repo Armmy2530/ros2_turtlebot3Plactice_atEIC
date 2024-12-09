@@ -123,7 +123,7 @@ def generate_launch_description():
                                     '-x', x_pose,
                                     '-y', y_pose,
                                     '-z','0.01',
-                                    '-Y','0.7853981634'],
+                                    ],
                         output='screen')
 
     forward_velocity_spawner = Node(
