@@ -16,6 +16,9 @@ find_package(nav_msgs REQUIRED)
 find_package(sensor_msgs REQUIRED)
 find_package(control_msgs REQUIRED)
 find_package(geometry_msgs REQUIRED)
+find_package(tf2 REQUIRED)
+find_package(tf2_msgs REQUIRED)
+find_package(tf2_ros REQUIRED)
 
 # Link libraries
 ament_target_dependencies(omni_controller
@@ -25,6 +28,9 @@ ament_target_dependencies(omni_controller
   sensor_msgs
   geometry_msgs
   control_msgs
+  tf2
+  tf2_msgs
+  tf2_ros
 )
 
 if(BUILD_TESTING)
