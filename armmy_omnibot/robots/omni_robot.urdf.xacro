@@ -281,5 +281,14 @@
     <plugin name="gazebo_ros2_control" filename="libgazebo_ros2_control.so">
       <parameters>$(find armmy_omnibot)/config/ros2_controller/my_controllers.yaml</parameters>
     </plugin>
+
+    <plugin name="gazebo_ros_p3d" filename="libgazebo_ros_p3d.so">
+        <ros>
+          <namespace>gazebo_ground_truth</namespace>
+        </ros>
+        <frame_name>world</frame_name>
+        <body_name>base_footprint</body_name>
+        <update_rate>50.0</update_rate>
+      </plugin>
   </gazebo>
 </robot>

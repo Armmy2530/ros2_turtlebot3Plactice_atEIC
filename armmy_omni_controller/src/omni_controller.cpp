@@ -9,8 +9,8 @@
 #include <tf2_ros/transform_broadcaster.h>
 
 #define WHEELS 4
-#define WHEEL_Radian 0.022
-#define WHEEL_Offset 0.060 // Center of Base to Wheel + (Wheel thickness / 2) | 0.03875 + 0.00925
+#define WHEEL_Radian 0.0247
+#define WHEEL_Offset 0.067 // Center of Base to Wheel + (Wheel thickness / 2) | 0.03875 + 0.00925
 
 #define USE_SIM_TIME_ true
 #define ODOM_Method 1 // 0:Euler 1:RUNGE_KUTTA
@@ -50,10 +50,26 @@ public:
     this->get_parameter("wheel_radius", wheel_radius_);
     this->get_parameter("wheel_offset", wheel_base_);
 
+
+    //initialize Pose
+    this->declare_parameter<double>("init_x", 0.00);
+    this->declare_parameter<double>("init_y", 0.00);
+    this->declare_parameter<double>("init_theta", 0.00);
+
+    this->get_parameter("init_x", y);
+    this->get_parameter("init_y", x);
+    x=-x; // invert x_init
+    this->get_parameter("init_theta", theta);
+
     prev_time = this->get_clock()->now();
     curr_time = this->get_clock()->now();
 
     tf_broadcaster = std::make_shared<tf2_ros::TransformBroadcaster>(*this);
+
+    RCLCPP_INFO(
+        this->get_logger(),
+        "OmniController stated!!! Wheel radian: %f Offset: %f",wheel_radius_, wheel_base_
+        );
   }
 
 private:

@@ -51,6 +51,12 @@ def generate_launch_description():
     use_ros2_control = LaunchConfiguration('use_ros2_control', default='true')
     rviz_config_file = LaunchConfiguration('rviz_config_file')
     use_rviz = LaunchConfiguration('use_rviz')
+
+    debug_cmd_vel = LaunchConfiguration('debug_cmd_vel', default='true')
+    debug_odom = LaunchConfiguration('debug_odom', default='false')
+    wheel_radius = LaunchConfiguration('wheel_radius', default='0.0247')
+    wheel_offset = LaunchConfiguration('wheel_offset', default='0.067')
+    init_theta = LaunchConfiguration('init_theta', default='0.0')
     
     declare_rviz_config_file_cmd = DeclareLaunchArgument(
         'rviz_config_file',
@@ -138,12 +144,19 @@ def generate_launch_description():
         arguments=["joint_broad"],
     )
 
-    odom_bridge_cmd = Node(
-        package="armmy_nodebridge",
-        executable="odom_bridge",
-        name='topic_bridge',
-        output='screen',
-    )
+    armmy_omni_controller_cmd = Node(
+            package='armmy_omni_controller',
+            executable='omni_controller',
+            parameters=[{'use_sim_time': use_sim_time,
+                'debug_cmd_vel': debug_cmd_vel,
+                'debug_odom'   : debug_odom,
+                'wheel_radius' : wheel_radius,
+                'wheel_offset' : wheel_offset,
+                'init_x'       : x_pose,
+                'init_y'       : y_pose,
+                'init_theta'   : init_theta,
+            }],
+         )
 
     rviz_cmd = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
@@ -161,10 +174,10 @@ def generate_launch_description():
     ld.add_action(spawn_robot_cmd)
     ld.add_action(forward_velocity_spawner)
     ld.add_action(joint_broad_spawner)
-    ld.add_action(odom_bridge_cmd)
     ld.add_action(foxgloveBridge_cmd)
     ld.add_action(twist_mux)
     ld.add_action(twist_stamper)
+    ld.add_action(armmy_omni_controller_cmd)
     ld.add_action(declare_rviz_config_file_cmd)
     ld.add_action(declare_use_rviz_cmd)
     ld.add_action(rviz_cmd)
