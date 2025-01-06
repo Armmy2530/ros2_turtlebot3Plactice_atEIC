@@ -156,6 +156,7 @@ def generate_launch_description():
                 'init_y'       : y_pose,
                 'init_theta'   : init_theta,
             }],
+            condition=IfCondition(LaunchConfiguration('use_omni_controller', default='true'))
          )
 
     rviz_cmd = IncludeLaunchDescription(

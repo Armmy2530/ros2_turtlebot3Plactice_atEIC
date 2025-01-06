@@ -9,8 +9,8 @@
 #include <tf2_ros/transform_broadcaster.h>
 
 #define WHEELS 4
-#define WHEEL_Radian 0.0247
-#define WHEEL_Offset 0.067 // Center of Base to Wheel + (Wheel thickness / 2) | 0.03875 + 0.00925
+#define WHEEL_Radian 0.0247 // 35mm = 0.0350
+#define WHEEL_Offset 0.067 // Center of Base to Wheel + (Wheel thickness / 2) | 0.03875 + 0.00925 = 0.048
 
 #define USE_SIM_TIME_ true
 #define ODOM_Method 1 // 0:Euler 1:RUNGE_KUTTA
@@ -75,22 +75,14 @@ public:
 private:
   void cmdVel_Callback(const geometry_msgs::msg::Twist::SharedPtr msg) const
   {
-    // Forward kinematics to calculate wheel velocities
-
-    // My method is x+ -> Right   y+ -> up
-    // But ROS is   x+ -> Up     y+ -> Left
-    // Very Good!!! my head is hurt
-
-    // double vx = msg->linear.x;
-    // double vy = msg->linear.y;
-    double vx    = msg->linear.y * -1;
-    double vy    = msg->linear.x;
+    double vx = msg->linear.x;
+    double vy = msg->linear.y;
     double omega = msg->angular.z;
 
-    double wheel_fr = ( vx - vy - (omega * wheel_base_)) / wheel_radius_;
-    double wheel_br = (-vx - vy - (omega * wheel_base_)) / wheel_radius_;
-    double wheel_fl = ( vx + vy - (omega * wheel_base_)) / wheel_radius_;
-    double wheel_bl = (-vx + vy - (omega * wheel_base_)) / wheel_radius_;
+    double wheel_fr = (-vy - vx - (omega * wheel_base_)) / wheel_radius_;
+    double wheel_br = ( vy - vx - (omega * wheel_base_)) / wheel_radius_;
+    double wheel_fl = (-vy + vx - (omega * wheel_base_)) / wheel_radius_;
+    double wheel_bl = ( vy + vx - (omega * wheel_base_)) / wheel_radius_;
 
     if(cmd_vel_debug){
       RCLCPP_INFO(
@@ -131,8 +123,8 @@ private:
     }
 
     /* forward kinematic */
-    double v_x   = (wheel_radius_ / 4) * ( wheel_omega[2] - wheel_omega[1] + wheel_omega[3] - wheel_omega[0]);
-    double v_y   = (wheel_radius_ / 4) * (-wheel_omega[2] - wheel_omega[1] + wheel_omega[3] + wheel_omega[0]);
+    double v_y   = (wheel_radius_ / 4) * (-wheel_omega[2] + wheel_omega[1] - wheel_omega[3] + wheel_omega[0]);
+    double v_x   = (wheel_radius_ / 4) * (-wheel_omega[2] - wheel_omega[1] + wheel_omega[3] + wheel_omega[0]);
     double omega = (wheel_radius_ / 4) * (-wheel_omega[2] - wheel_omega[1] - wheel_omega[3] - wheel_omega[0]) * (1 / (wheel_base_));
 
     /* odometry */
@@ -172,8 +164,8 @@ private:
     // But ROS is   x+ -> Up     y+ -> Left
     // Very Good!!! my head is hurt
 
-    odom_msg.pose.pose.position.x = y;
-    odom_msg.pose.pose.position.y = -x;
+    odom_msg.pose.pose.position.x = x;
+    odom_msg.pose.pose.position.y = y;
     odom_msg.pose.pose.position.z = 0;
 
     tf2::Quaternion q;
@@ -201,8 +193,8 @@ private:
     transform_stamped.child_frame_id = "base_footprint";  // Child frame
 
     // Set translation (x, y, z)
-    transform_stamped.transform.translation.x = y;
-    transform_stamped.transform.translation.y = -x;
+    transform_stamped.transform.translation.x = x;
+    transform_stamped.transform.translation.y = y;
     transform_stamped.transform.translation.z = 0.0;
 
     // Set rotation using the quaternion
@@ -232,7 +224,7 @@ private:
         this->get_logger(),
         "vx: %.6f vy: %.6f omega: %.6f", v_x, v_y, omega
       );
-      RCLCPP_INFO(
+      RCLCPP_INFO(  
         this->get_logger(),
         "x: %.6f y: %.6f theta: %.6f", x, y, theta
       );
