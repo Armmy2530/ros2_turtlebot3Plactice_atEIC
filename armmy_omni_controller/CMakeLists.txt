@@ -7,6 +7,7 @@ endif()
 
 # Add executable
 add_executable(omni_controller src/omni_controller.cpp)
+add_executable(3wheel_omni_controller src/3wheel_omni_controller.cpp)
 
 # find dependencies
 find_package(ament_cmake REQUIRED)
@@ -33,6 +34,18 @@ ament_target_dependencies(omni_controller
   tf2_ros
 )
 
+ament_target_dependencies(3wheel_omni_controller
+  rclcpp
+  std_msgs
+  nav_msgs
+  sensor_msgs
+  geometry_msgs
+  control_msgs
+  tf2
+  tf2_msgs
+  tf2_ros
+)
+
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)
   # the following line skips the linter which checks for copyrights
@@ -46,7 +59,7 @@ if(BUILD_TESTING)
 endif()
 
 # Install targets
-install(TARGETS omni_controller
+install(TARGETS omni_controller 3wheel_omni_controller
   DESTINATION lib/${PROJECT_NAME})
   
 # Install any launch files if applicable (optional)

@@ -21,7 +21,7 @@ import os
 from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription
 from launch.conditions import IfCondition
-from launch.actions import IncludeLaunchDescription, DeclareLaunchArgument
+from launch.actions import IncludeLaunchDescription, DeclareLaunchArgument, TimerAction
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.substitutions import LaunchConfiguration
 from launch_ros.actions import Node
@@ -122,7 +122,6 @@ def generate_launch_description():
         }.items()
     )
 
-    # Run the spawner node from the gazebo_ros package. The entity name doesn't really matter if you only have a single robot.
     spawn_robot_cmd = Node(package='gazebo_ros', executable='spawn_entity.py',
                         arguments=['-topic', 'robot_description',
                                     '-entity', 'my_bot',
@@ -131,6 +130,11 @@ def generate_launch_description():
                                     '-z','0.01',
                                     ],
                         output='screen')
+    
+    delay_spawn_robot_cmd = TimerAction(
+        period=10.0,
+        actions=[spawn_robot_cmd]
+    )
 
     forward_velocity_spawner = Node(
         package="controller_manager",
@@ -172,7 +176,8 @@ def generate_launch_description():
     ld.add_action(gzmodel_cmd)
     ld.add_action(gzserver_cmd)
     ld.add_action(gzclient_cmd)
-    ld.add_action(spawn_robot_cmd)
+    # ld.add_action(spawn_robot_cmd)
+    ld.add_action(delay_spawn_robot_cmd)
     ld.add_action(forward_velocity_spawner)
     ld.add_action(joint_broad_spawner)
     ld.add_action(foxgloveBridge_cmd)

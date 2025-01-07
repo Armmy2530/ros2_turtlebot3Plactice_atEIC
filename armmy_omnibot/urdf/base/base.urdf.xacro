@@ -21,6 +21,7 @@
           <mesh filename="file://$(find armmy_omnibot)/meshes/base_link.stl"
             scale="0.001 0.001 0.001" />
         </geometry>
+        <material name="white" />
       </visual>
       <collision>
         <geometry>

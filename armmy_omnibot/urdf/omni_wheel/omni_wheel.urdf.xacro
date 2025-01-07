@@ -1,66 +1,69 @@
 <?xml version="1.0"?>
 <robot xmlns:xacro="http://ros.org/wiki/xacro">
 
-  <xacro:include filename="$(find armmy_omnibot)/urdf/omni_wheel/omni_wheel.transmission.xacro"/>
-  <xacro:include filename="$(find armmy_omnibot)/urdf/omni_wheel/omni_wheel.gazebo.xacro"/>
+  <xacro:include filename="$(find armmy_omnibot)/urdf/omni_wheel/omni_wheel.transmission.xacro" />
+  <xacro:include filename="$(find armmy_omnibot)/urdf/omni_wheel/omni_wheel.gazebo.xacro" />
   <xacro:include filename="$(find armmy_omnibot)/urdf/inertial_macros.xacro" />
-  
+
   <xacro:property name="wheel_thickness" value="0.0185" />
   <xacro:property name="wheel_radian" value="0.0175" />
   <xacro:property name="wheel_mass" value="0.05" />
-  
+
   <xacro:macro name="wheel_v0" params="prefix parent *joint_origin *joint_axis">
-	<joint name="${prefix}_wheel_joint" type="continuous">
-	  <xacro:insert_block name="joint_origin"/>
-	  <parent link="${parent}"/>
-	  <child link="${prefix}_wheel_link"/>
-          <limit effort="100" velocity="100"/>
-	  <xacro:insert_block name="joint_axis"/>
-	</joint>
+    <joint name="${prefix}_wheel_joint" type="continuous">
+      <xacro:insert_block name="joint_origin" />
+      <parent link="${parent}" />
+      <child link="${prefix}_wheel_link" />
+      <limit effort="100" velocity="100" />
+      <xacro:insert_block name="joint_axis" />
+    </joint>
 
-	<link name="${prefix}_wheel_link">
-	  <visual>
-		<geometry>
-          <mesh filename="package://armmy_omnibot/meshes/omni_wheel/wheel_base.stl" scale="0.001 0.001 0.001" />
-		</geometry>
-	  </visual>
-	  <collision>
-		<geometry>
-          <mesh filename="package://armmy_omnibot/meshes/omni_wheel/wheel_base.stl" scale="0.001 0.001 0.001" />
-		</geometry>
-	  </collision>
+    <link name="${prefix}_wheel_link">
+      <visual>
+        <geometry>
+          <mesh filename="package://armmy_omnibot/meshes/omni_wheel/wheel_base.stl"
+            scale="0.001 0.001 0.001" />
+        </geometry>
+        <material name="light_black" />
+      </visual>
+      <collision>
+        <geometry>
+          <mesh filename="package://armmy_omnibot/meshes/omni_wheel/wheel_base.stl"
+            scale="0.001 0.001 0.001" />
+        </geometry>
+      </collision>
 
-    <xacro:inertial_cylinder mass="${wheel_mass}" length="${wheel_thickness}"
+      <xacro:inertial_cylinder mass="${wheel_mass}" length="${wheel_thickness}"
         radius="${wheel_radian}">
         <origin xyz="0 ${wheel_thickness/2} 0" rpy="1.570796327 0 0" />
       </xacro:inertial_cylinder>
 
-	  <!-- <inertial>
+      <!-- <inertial>
 		<origin xyz="0.0 -0.0 -0.0"/>
 		<mass value="0.25"/>
 		<inertia ixx="0.00031" ixy="0" ixz="0" iyy="0.0005" iyz="0" izz="0.00031"/>
 	  </inertial> -->
 
-          <surface>
-            <friction>
-              <ode>
-                <mu1>1.2</mu1>
-                <mu2>1.2</mu2>
-                <kp>1e15</kp>
-                <kd>1e13</kd>
-              </ode>
-            </friction>
-            <bounce>
-              <restitution_coefficient>0.01</restitution_coefficient>
-              <threshold>0</threshold>
-            </bounce>
-            <contact>
-              <ode>
-                <max_vel>10</max_vel>
-              </ode>
-            </contact>
-          </surface>
-	</link>
+      <surface>
+        <friction>
+          <ode>
+            <mu1>1.2</mu1>
+            <mu2>1.2</mu2>
+            <kp>1e15</kp>
+            <kd>1e13</kd>
+          </ode>
+        </friction>
+        <bounce>
+          <restitution_coefficient>0.01</restitution_coefficient>
+          <threshold>0</threshold>
+        </bounce>
+        <contact>
+          <ode>
+            <max_vel>10</max_vel>
+          </ode>
+        </contact>
+      </surface>
+    </link>
   </xacro:macro>
-  
+
 </robot>

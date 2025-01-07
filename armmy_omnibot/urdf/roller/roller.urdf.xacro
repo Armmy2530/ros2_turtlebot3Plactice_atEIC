@@ -23,6 +23,7 @@
           <mesh filename="package://armmy_omnibot/meshes/omni_wheel/roller.stl"
             scale="0.001 0.001 0.001" />
         </geometry>
+        <material name="black" />
       </visual>
       <collision>
         <geometry>

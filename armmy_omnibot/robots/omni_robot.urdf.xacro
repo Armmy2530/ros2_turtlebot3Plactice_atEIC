@@ -10,6 +10,7 @@
   <xacro:include filename="$(find armmy_omnibot)/urdf/omni_wheel/omni_wheel.urdf.xacro" />
   <xacro:include filename="$(find armmy_omnibot)/urdf/roller/roller.urdf.xacro" />
   <xacro:include filename="$(find armmy_omnibot)/urdf/lidar/lidar.urdf.xacro" />
+  <xacro:include filename="$(find armmy_omnibot)/urdf/color.xacro" />
 
   <!-- =============== Link & Joint =============== -->
   <!-- Base -->

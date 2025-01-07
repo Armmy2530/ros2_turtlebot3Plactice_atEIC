@@ -10,6 +10,7 @@
   <xacro:include filename="$(find armmy_omnibot)/urdf/omni_wheel/omni_wheel.urdf.xacro" />
   <xacro:include filename="$(find armmy_omnibot)/urdf/roller/roller.urdf.xacro" />
   <xacro:include filename="$(find armmy_omnibot)/urdf/lidar/lidar.urdf.xacro" />
+  <xacro:include filename="$(find armmy_omnibot)/urdf/color.xacro" />
 
   <!-- =============== Link & Joint =============== -->
   <!-- Base -->
@@ -21,7 +22,7 @@
   <!-- Wheel -->
   <!-- 1st wheel -->
   <xacro:wheel_v0 prefix="first" parent="base_link">
-    <origin xyz="-0.0 0.038375 -0.0" rpy="0 0 0" />
+    <origin xyz="-0.038375 0.0 -0.0" rpy="0 0 ${M_PI/2}" />
     <axis xyz="0.0 1.0 0.0" />
   </xacro:wheel_v0>
 
@@ -68,7 +69,7 @@
 
   <!-- 2nd wheel -->
   <xacro:wheel_v0 prefix="second" parent="base_link">
-    <origin xyz="-0.03323372487 -0.0191875 -0.0" rpy="0 0 ${4*M_PI/6}" />
+    <origin xyz="0.0191875 -0.03323372487 -0.0" rpy="0 0 ${7*M_PI/6}" />
     <axis xyz="0.0 1.0 0.0" />
   </xacro:wheel_v0>
 
@@ -115,7 +116,7 @@
 
   <!-- 3rd wheel -->
   <xacro:wheel_v0 prefix="third" parent="base_link">
-    <origin xyz="0.03323372487 -0.0191875 -0.0" rpy="0 0 ${8*M_PI/6}" />
+    <origin xyz="0.0191875 0.03323372487 -0.0" rpy="0 0 ${11*M_PI/6}" />
     <axis xyz="0.0 1.0 0.0" />
   </xacro:wheel_v0>
 
@@ -221,7 +222,7 @@
 
   <gazebo>
     <plugin name="gazebo_ros2_control" filename="libgazebo_ros2_control.so">
-      <parameters>$(find armmy_omnibot)/config/ros2_controller/my_controllers.yaml</parameters>
+      <parameters>$(find armmy_omnibot)/config/ros2_controller/3wheel_controllers.yaml</parameters>
     </plugin>
 
     <plugin name="gazebo_ros_p3d" filename="libgazebo_ros_p3d.so">
