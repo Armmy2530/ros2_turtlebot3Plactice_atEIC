@@ -123,9 +123,9 @@ private:
     }
 
     /* forward kinematic */
-    double v_x   = wheel_radius_ * std::sin(PI / 3) * (-wheel_omega[1] + wheel_omega[2]);
-    double v_y   = wheel_radius_ * (wheel_omega[0] - (0.5 * (-wheel_omega[1] + wheel_omega[2])) );
-    double omega = wheel_radius_ * (1 / wheel_base_) * (-wheel_omega[0] - wheel_omega[1] - wheel_omega[2]);
+    double v_x   = wheel_radius_  / (2 * std::sin(PI / 3)) * (-wheel_omega[1] + wheel_omega[2]);
+    double v_y   = (wheel_radius_ / 3) * (wheel_omega[0] + (2 * (-wheel_omega[1] - wheel_omega[2])));
+    double omega = (wheel_radius_ / (3 * wheel_base_)) * (-wheel_omega[0] - wheel_omega[1] - wheel_omega[2]);
 
     /* odometry */
     double delta_x = v_x * dt;
