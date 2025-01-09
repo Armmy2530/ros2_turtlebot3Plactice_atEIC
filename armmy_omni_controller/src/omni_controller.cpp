@@ -56,9 +56,8 @@ public:
     this->declare_parameter<double>("init_y", 0.00);
     this->declare_parameter<double>("init_theta", 0.00);
 
-    this->get_parameter("init_x", y);
-    this->get_parameter("init_y", x);
-    x=-x; // invert x_init
+    this->get_parameter("init_x", x);
+    this->get_parameter("init_y", y);
     this->get_parameter("init_theta", theta);
 
     prev_time = this->get_clock()->now();
