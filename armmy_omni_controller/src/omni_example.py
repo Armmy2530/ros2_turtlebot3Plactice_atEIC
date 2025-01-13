@@ -5,16 +5,16 @@ DegToRad = 2 * math.pi / 360
 
 def ik_omni4wheel_arm(vx,vy,omega):
     ans = []
-    ans.append( ( vx - vy - (omega * wheel_offset)) / wheel_radius) #FR
-    ans.append( (-vx - vy - (omega * wheel_offset)) / wheel_radius) #BR
-    ans.append( ( vx + vy - (omega * wheel_offset)) / wheel_radius) #FL
-    ans.append( (-vx + vy - (omega * wheel_offset)) / wheel_radius) #BL
+    ans.append(((( vx - vy) * 2**(1/2)) - (omega * wheel_offset)) / wheel_radius) #FR
+    ans.append((((-vx - vy) * 2**(1/2)) - (omega * wheel_offset)) / wheel_radius) #BR
+    ans.append(((( vx + vy) * 2**(1/2)) - (omega * wheel_offset)) / wheel_radius) #FL
+    ans.append((((-vx + vy) * 2**(1/2)) - (omega * wheel_offset)) / wheel_radius) #BL
     return ans
 
 def fk_omni(FR, BR, FL, BL):
-    vx = (FR - BR + FL - BL) * (wheel_radius / 4)
-    vy = (-FR - BR + FL + BL) * (wheel_radius / 4)
-    omega = (-FR - BR - FL - BL) * (wheel_radius / 4) * (1 / (wheel_offset));
+    vx = (FR - BR + FL - BL)* (2**(1/2)) * (wheel_radius / 4)
+    vy = (-FR - BR + FL + BL)* (2**(1/2)) * (wheel_radius / 4)
+    omega = (-FR - BR - FL - BL) * (wheel_radius / 4) * (1 / wheel_offset);
     return vx, vy, omega
 
 def visualize_fk(FR, BR, FL, BL):
@@ -73,7 +73,7 @@ def OmegaToVel(src):
 # define WHEEL_Offset 0.067 // Center of Base to Wheel + (Wheel thickness / 2) | 0.03875 + 0.00925 = 0.048
 
 wheel_radius = 0.0175
-wheel_offset = 0.038375
+wheel_offset = 0.048
 
 
 # wheel_radius = 0.0247
@@ -87,18 +87,18 @@ wheel_offset = 0.038375
 
 # FR, BR, FL, BL = (0,0,0,1)
 # FR, BR, FL, BL = -28.57142857142857, 28.57142857142857, -28.57142857142857, 28.57142857142857
-FR, BR, FL, BL = 20.24, -20.24, 20.24, -20.24
-visualize_fk(FR, BR, FL, BL)
+# FR, BR, FL, BL = 20.24, -20.24, 20.24, -20.24
+# visualize_fk(FR, BR, FL, BL)
 
 # print(f"1,0,0 : {ik_omni4wheel_arm(1,0,0)}")
 # print(f"0,1,0 : {ik_omni4wheel_arm(0,1,0)}")
 # print(f"1,1,0 : {ik_omni4wheel_arm(1,1,0)}")
 # print(f"0,0,1 : {ik_omni4wheel_arm(0,0,1)}")
 
-# ans = ik_omni4wheel_arm(-0.5 ,0 , 0)
+ans = ik_omni4wheel_arm(0 ,0 , -1.0)
 # ans = ik_omni4wheel_arm(0 ,1 , 0)
 # ans = ik_omni4wheel_arm(0 ,0 , 1)
 # ans = ik_omni4wheel_arm(1 ,1 , 1)
 
-# print(ans)
-# visualize_fk(*ans)
+print(ans)
+visualize_fk(*ans)

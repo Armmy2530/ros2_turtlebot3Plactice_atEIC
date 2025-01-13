@@ -9,8 +9,8 @@
 #include <tf2_ros/transform_broadcaster.h>
 
 #define WHEELS 4
-#define WHEEL_Radian 0.0247 // 35mm = 0.0350
-#define WHEEL_Offset 0.067 // Center of Base to Wheel + (Wheel thickness / 2) | 0.03875 + 0.00925 = 0.048
+#define WHEEL_Radian 0.0175 
+#define WHEEL_Offset 0.048
 
 #define USE_SIM_TIME_ true
 #define ODOM_Method 1 // 0:Euler 1:RUNGE_KUTTA
@@ -78,10 +78,10 @@ private:
     double vy = msg->linear.y;
     double omega = msg->angular.z;
 
-    double wheel_fr = (-vy - vx - (omega * wheel_base_)) / wheel_radius_;
-    double wheel_br = ( vy - vx - (omega * wheel_base_)) / wheel_radius_;
-    double wheel_fl = (-vy + vx - (omega * wheel_base_)) / wheel_radius_;
-    double wheel_bl = ( vy + vx - (omega * wheel_base_)) / wheel_radius_;
+    double wheel_fr = ( ((-vy - vx)* 1.414213562) - (omega * wheel_base_)) / wheel_radius_;
+    double wheel_br = ( (( vy - vx)* 1.414213562) - (omega * wheel_base_)) / wheel_radius_;
+    double wheel_fl = ( ((-vy + vx)* 1.414213562) - (omega * wheel_base_)) / wheel_radius_;
+    double wheel_bl = ( (( vy + vx)* 1.414213562) - (omega * wheel_base_)) / wheel_radius_;
 
     if(cmd_vel_debug){
       RCLCPP_INFO(
@@ -122,8 +122,8 @@ private:
     }
 
     /* forward kinematic */
-    double v_y   = (wheel_radius_ / 4) * (-wheel_omega[2] + wheel_omega[1] - wheel_omega[3] + wheel_omega[0]);
-    double v_x   = (wheel_radius_ / 4) * (-wheel_omega[2] - wheel_omega[1] + wheel_omega[3] + wheel_omega[0]);
+    double v_y   = (wheel_radius_ / 4) * 1.414213562 * (-wheel_omega[2] + wheel_omega[1] - wheel_omega[3] + wheel_omega[0]);
+    double v_x   = (wheel_radius_ / 4) * 1.414213562 * (-wheel_omega[2] - wheel_omega[1] + wheel_omega[3] + wheel_omega[0]);
     double omega = (wheel_radius_ / 4) * (-wheel_omega[2] - wheel_omega[1] - wheel_omega[3] - wheel_omega[0]) * (1 / (wheel_base_));
 
     /* odometry */
