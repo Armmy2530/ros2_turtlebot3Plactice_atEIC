@@ -130,6 +130,12 @@ def generate_launch_description():
         executable="spawner",
         arguments=["diff_cont"],
     )
+
+    forward_velocity_spawner = Node(
+        package="controller_manager",
+        executable="spawner",
+        arguments=["forward_velocity_controller"],
+    )
     
     arm_joint_spawner = Node(
         package="controller_manager",
@@ -164,7 +170,8 @@ def generate_launch_description():
     ld.add_action(gzserver_cmd)
     ld.add_action(gzclient_cmd)
     ld.add_action(spawn_turtlebot_cmd)
-    ld.add_action(diff_drive_spawner)
+    ld.add_action(forward_velocity_spawner)
+    # ld.add_action(diff_drive_spawner)
     ld.add_action(arm_joint_spawner)
     ld.add_action(joint_broad_spawner)
     ld.add_action(odom_bridge_cmd)

@@ -3,8 +3,8 @@ controller_manager:
     update_rate: 60
     use_sim_time: true
 
-    diff_cont:
-      type: diff_drive_controller/DiffDriveController
+    # diff_cont:
+    #   type: diff_drive_controller/DiffDriveController
 
     joint_broad:
       type: joint_state_broadcaster/JointStateBroadcaster
@@ -12,6 +12,20 @@ controller_manager:
     arm_joint_position_controller:
       # type: forward_command_controller/ForwardCommandController
       type: "position_controllers/JointGroupPositionController"
+
+    forward_velocity_controller:
+      type: forward_command_controller/ForwardCommandController
+
+forward_velocity_controller:
+  ros__parameters:
+    joints:
+      - wheel_left_joint
+      - wheel_right_joint
+    interface_name: velocity
+    command_interfaces:
+      - velocity
+    state_interfaces:
+      - velocity
 
 diff_cont:
   ros__parameters:
@@ -38,7 +52,7 @@ diff_cont:
     odom_frame_id: odom
     pose_covariance_diagonal : [0.001, 0.001, 0.0, 0.0, 0.0, 0.01]
     twist_covariance_diagonal: [0.001, 0.0, 0.0, 0.0, 0.0, 0.01]
-    # open_loop: true
+    open_loop: true
     enable_odom_tf: true
 
     # cmd_vel_timeout: x
