@@ -106,7 +106,7 @@ private:
     }
 
     std::vector<double> wheel_position = msg->position;
-    double delta_pos[4]; // 0: BL 1:BR 2:FR 3:FL
+    double delta_pos[2]; // 0:L 1:R
 
     for (int i = 0; i < WHEELS; i++) {
         curr_pos[i] = wheel_position[i];
@@ -120,9 +120,9 @@ private:
     }
 
     /* forward kinematic */
-    double v_y   = (wheel_radius_ / 4) * 1.414213562 * (-wheel_omega[2] + wheel_omega[1] - wheel_omega[3] + wheel_omega[0]);
-    double v_x   = (wheel_radius_ / 4) * 1.414213562 * (-wheel_omega[2] - wheel_omega[1] + wheel_omega[3] + wheel_omega[0]);
-    double omega = (wheel_radius_ / 4) * (-wheel_omega[2] - wheel_omega[1] - wheel_omega[3] - wheel_omega[0]) * (1 / (wheel_base_));
+    double v_x   = (wheel_radius_ / 2) * std::cos(theta) * (wheel_omega[0] + wheel_omega[1]);
+    double v_y   = (wheel_radius_ / 2) * std::sin(theta) * (wheel_omega[0] + wheel_omega[1]);
+    double omega = (wheel_radius_ / 2) * (-wheel_omega[0] + wheel_omega[1]) * (1 / (wheel_base_));
 
     /* odometry */
     double delta_x = v_x * dt;
@@ -205,10 +205,10 @@ private:
 
     // Debug Message
     if(odometry_debug){
-      // RCLCPP_INFO(
-      //   this->get_logger(),
-      //   "dt: %.6f d_pos: %.6f omega: %.6f", dt, delta_pos[0], wheel_omega[0]
-      // );
+      RCLCPP_INFO(
+        this->get_logger(),
+        "dt: %.6f d_pos: %.6f omega: %.6f dx: %.6f dy: %.6f d_theta: %.6f", dt, delta_pos[0], wheel_omega[0], delta_x, delta_y, delta_theta
+      );
       // RCLCPP_INFO(
       //   this->get_logger(),
       //   "Wheel position: %.2f %.2f %.2f %.2f", wheel_position[0], wheel_position[1], wheel_position[2], wheel_position[3]

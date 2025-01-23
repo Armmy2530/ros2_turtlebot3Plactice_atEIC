@@ -132,7 +132,7 @@ def generate_launch_description():
                         output='screen')
     
     delay_spawn_robot_cmd = TimerAction(
-        period=10.0,
+        period=15.0,
         actions=[spawn_robot_cmd]
     )
 

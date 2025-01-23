@@ -174,7 +174,7 @@ def generate_launch_description():
     # ld.add_action(diff_drive_spawner)
     ld.add_action(arm_joint_spawner)
     ld.add_action(joint_broad_spawner)
-    ld.add_action(odom_bridge_cmd)
+    # ld.add_action(odom_bridge_cmd)
     ld.add_action(foxgloveBridge_cmd)
     ld.add_action(twist_mux)
     ld.add_action(twist_stamper)
