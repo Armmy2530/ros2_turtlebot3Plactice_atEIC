@@ -35,7 +35,9 @@ public:
     odometry_publisher = this->create_publisher<nav_msgs::msg::Odometry>(
         "odom", 10);
     
-    this->set_parameter(rclcpp::Parameter("use_sim_time", USE_SIM_TIME_));
+    this->declare_parameter<bool>("sim_time", USE_SIM_TIME_);
+    this->get_parameter("use_sim_time", use_sim_time);
+    // this->set_parameter(rclcpp::Parameter("use_sim_time", use_sim_time));
 
     this->declare_parameter<bool>("debug_cmd_vel", false);
     this->declare_parameter<bool>("debug_odom", false);
@@ -243,6 +245,7 @@ private:
   double x,y,theta; 
 
   bool cmd_vel_debug, odometry_debug; //Debug Parameter
+  bool use_sim_time;
 
   std::shared_ptr<tf2_ros::TransformBroadcaster> tf_broadcaster;
 

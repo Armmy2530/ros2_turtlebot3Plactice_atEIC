@@ -35,7 +35,9 @@ public:
     odometry_publisher = this->create_publisher<nav_msgs::msg::Odometry>(
         "odom", 10);
     
-    this->set_parameter(rclcpp::Parameter("use_sim_time", USE_SIM_TIME_));
+    this->declare_parameter<bool>("sim_time", USE_SIM_TIME_);
+    this->get_parameter("use_sim_time", use_sim_time);
+    // this->set_parameter(rclcpp::Parameter("use_sim_time", use_sim_time));
 
     this->declare_parameter<bool>("debug_cmd_vel", false);
     this->declare_parameter<bool>("debug_odom", false);
@@ -78,10 +80,10 @@ private:
     double vy = msg->linear.y;
     double omega = msg->angular.z;
 
-    double wheel_fr = ( ((-vy - vx)* 1.414213562) - (omega * wheel_base_)) / wheel_radius_;
-    double wheel_br = ( (( vy - vx)* 1.414213562) - (omega * wheel_base_)) / wheel_radius_;
-    double wheel_fl = ( ((-vy + vx)* 1.414213562) - (omega * wheel_base_)) / wheel_radius_;
-    double wheel_bl = ( (( vy + vx)* 1.414213562) - (omega * wheel_base_)) / wheel_radius_;
+    double wheel_fr = ( ((-vy - vx)* 0.707106781) - (omega * wheel_base_)) / wheel_radius_;
+    double wheel_br = ( (( vy - vx)* 0.707106781) - (omega * wheel_base_)) / wheel_radius_;
+    double wheel_fl = ( ((-vy + vx)* 0.707106781) - (omega * wheel_base_)) / wheel_radius_;
+    double wheel_bl = ( (( vy + vx)* 0.707106781) - (omega * wheel_base_)) / wheel_radius_;
 
     if(cmd_vel_debug){
       RCLCPP_INFO(
@@ -245,6 +247,7 @@ private:
   double x,y,theta; 
 
   bool cmd_vel_debug, odometry_debug; //Debug Parameter
+  bool use_sim_time;
 
   std::shared_ptr<tf2_ros::TransformBroadcaster> tf_broadcaster;
 
