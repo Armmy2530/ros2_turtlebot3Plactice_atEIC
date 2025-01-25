@@ -13,7 +13,7 @@
 #define WHEEL_Offset 0.080
 
 #define USE_SIM_TIME_ true
-#define ODOM_Method 1 // 0:Euler 1:RUNGE_KUTTA
+#define ODOM_Method 2 // For DiffDrive using 2 only
 
 using std::placeholders::_1;
 
@@ -37,7 +37,9 @@ public:
     
     this->declare_parameter<bool>("sim_time", USE_SIM_TIME_);
     this->get_parameter("use_sim_time", use_sim_time);
-    // this->set_parameter(rclcpp::Parameter("use_sim_time", use_sim_time));
+
+    this->declare_parameter<int>("odom_method", ODOM_Method);
+    this->get_parameter("odom_method", odom_method);
 
     this->declare_parameter<bool>("debug_cmd_vel", false);
     this->declare_parameter<bool>("debug_odom", false);
@@ -133,17 +135,23 @@ private:
 
     theta += delta_theta;
 
-    switch(ODOM_Method) {
+    switch(odom_method) {
         case 0: 
-            // Euler
+            // Euler ** Broken with diffdrive
             x += delta_x * std::cos(theta) - delta_y * std::sin(theta);
             y += delta_x * std::sin(theta) + delta_y * std::cos(theta);
             break;
 
         case 1:
-            // Runge-Kutta
+            // Runge-Kutta ** Broken with diffdrive
             x += delta_x * std::cos(theta + omega * dt / 2) - delta_y * std::sin(theta + omega * dt / 2);
             y += delta_x * std::sin(theta + omega * dt / 2) + delta_y * std::cos(theta + omega * dt / 2);
+            break;
+
+        case 2:
+            // Analytic Working with diffdrive
+            x += delta_x;
+            y += delta_y;
             break;
     }
 
@@ -209,7 +217,7 @@ private:
     if(odometry_debug){
       RCLCPP_INFO(
         this->get_logger(),
-        "dt: %.6f d_pos: %.6f omega: %.6f dx: %.6f dy: %.6f d_theta: %.6f", dt, delta_pos[0], wheel_omega[0], delta_x, delta_y, delta_theta
+        "dt: %.6f d_pos: %.6f omega: %.6f", dt, delta_pos[0], wheel_omega[0]
       );
       // RCLCPP_INFO(
       //   this->get_logger(),
@@ -222,6 +230,10 @@ private:
       RCLCPP_INFO(
         this->get_logger(),
         "vx: %.6f vy: %.6f omega: %.6f", v_x, v_y, omega
+      );
+      RCLCPP_INFO(
+        this->get_logger(),
+        "dx: %.6f dy: %.6f d_theta: %.6f", delta_x, delta_y, delta_theta
       );
       RCLCPP_INFO(  
         this->get_logger(),
@@ -244,8 +256,9 @@ private:
   // Odometery
   double x,y,theta; 
 
-  bool cmd_vel_debug, odometry_debug; //Debug Parameter
-  bool use_sim_time;
+  bool  cmd_vel_debug, odometry_debug; //Debug Parameter
+  bool  use_sim_time;
+  int   odom_method;
 
   std::shared_ptr<tf2_ros::TransformBroadcaster> tf_broadcaster;
 

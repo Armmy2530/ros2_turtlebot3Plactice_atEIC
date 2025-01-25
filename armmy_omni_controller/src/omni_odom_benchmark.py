@@ -126,6 +126,16 @@ def main():
         node,
     ), interval=100)
 
+    def on_key(event):
+        if event.key == 'c':
+            node.odom_x.clear()
+            node.odom_y.clear()
+            node.ground_truth_x.clear()
+            node.ground_truth_y.clear()
+            node.get_logger().info('Cleared all data')
+
+    fig.canvas.mpl_connect('key_press_event', on_key)
+
     try:
         plt.show()
     except KeyboardInterrupt:

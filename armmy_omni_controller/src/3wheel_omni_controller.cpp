@@ -36,7 +36,11 @@ public:
     odometry_publisher = this->create_publisher<nav_msgs::msg::Odometry>(
         "odom", 10);
     
-    this->set_parameter(rclcpp::Parameter("use_sim_time", USE_SIM_TIME_));
+    this->declare_parameter<bool>("sim_time", USE_SIM_TIME_);
+    this->get_parameter("use_sim_time", use_sim_time);
+
+    this->declare_parameter<int>("odom_method", ODOM_Method);
+    this->get_parameter("odom_method", odom_method);
 
     this->declare_parameter<bool>("debug_cmd_vel", false);
     this->declare_parameter<bool>("debug_odom", false);
@@ -133,7 +137,7 @@ private:
 
     theta += delta_theta;
 
-    switch(ODOM_Method) {
+    switch(odom_method) {
         case 0: 
             // Euler
             x += delta_x * std::cos(theta) - delta_y * std::sin(theta);
@@ -144,6 +148,12 @@ private:
             // Runge-Kutta
             x += delta_x * std::cos(theta + omega * dt / 2) - delta_y * std::sin(theta + omega * dt / 2);
             y += delta_x * std::sin(theta + omega * dt / 2) + delta_y * std::cos(theta + omega * dt / 2);
+            break;
+
+        case 2:
+            // Analytic 
+            x += delta_x;
+            y += delta_y;
             break;
     }
 
@@ -245,6 +255,8 @@ private:
   double x,y,theta; 
 
   bool cmd_vel_debug, odometry_debug; //Debug Parameter
+  bool use_sim_time;
+  int  odom_method;
 
   std::shared_ptr<tf2_ros::TransformBroadcaster> tf_broadcaster;
 
