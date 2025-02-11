@@ -75,7 +75,7 @@ def generate_launch_description():
             package="twist_mux",
             executable="twist_mux",
             parameters=[twist_mux_params, {'use_sim_time': True}],
-            remappings=[('/cmd_vel_out','/diff_cont/cmd_vel_unstamped')]
+            remappings=[('/cmd_vel_out','/cmd_vel')]
         )
     
     robot_state_publisher_cmd = IncludeLaunchDescription(
@@ -103,11 +103,17 @@ def generate_launch_description():
         executable="spawner",
         arguments=["diff_cont"],
     )
+
+    forward_velocity_spawner = Node(
+        package="controller_manager",
+        executable="spawner",
+        arguments=["forward_velocity_controller"],
+    )
     
     arm_joint_spawner = Node(
         package="controller_manager",
         executable="spawner",
-        arguments=["forward_position_controller"],
+        arguments=["arm_joint_position_controller"],
     )
 
     joint_broad_spawner = Node(
@@ -135,7 +141,8 @@ def generate_launch_description():
     ld.add_action(robot_state_publisher_cmd)
     ld.add_action(gazebo)
     ld.add_action(spawn_entity)
-    ld.add_action(diff_drive_spawner)
+    ld.add_action(forward_velocity_spawner)
+    # ld.add_action(diff_drive_spawner)
     ld.add_action(arm_joint_spawner)
     ld.add_action(joint_broad_spawner)
     ld.add_action(foxgloveBridge_cmd)
