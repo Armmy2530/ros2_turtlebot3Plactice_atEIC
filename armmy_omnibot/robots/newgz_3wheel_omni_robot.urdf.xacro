@@ -1,0 +1,237 @@
+<?xml version="1.0"?>
+<robot name="omni_robot" xmlns:xacro="http://ros.org/wiki/xacro">
+
+  <xacro:property name="M_PI" value="3.14159274" />
+
+  <xacro:arg name="use_ros2_control" default="true" />
+  <xacro:arg name="sim_mode" default="false" />
+
+  <xacro:include filename="$(find armmy_omnibot)/urdf/base/base.urdf.xacro" />
+  <xacro:include filename="$(find armmy_omnibot)/urdf/omni_wheel/omni_wheel.urdf.xacro" />
+  <xacro:include filename="$(find armmy_omnibot)/urdf/roller/roller.urdf.xacro" />
+  <xacro:include filename="$(find armmy_omnibot)/urdf/lidar/lidar.urdf.xacro" />
+  <xacro:include filename="$(find armmy_omnibot)/urdf/color.xacro" />
+
+  <!-- =============== Link & Joint =============== -->
+  <!-- Base -->
+  <link name="base_footprint" />
+  <xacro:base_v0 parent="base_footprint">
+    <origin xyz="0 0 0" rpy="0 0 0" />
+  </xacro:base_v0>
+
+  <!-- Wheel -->
+  <!-- 1st wheel -->
+  <xacro:wheel_v0 prefix="first" parent="base_link">
+    <origin xyz="-0.038375 0.0 -0.0" rpy="0 0 ${M_PI/2}" />
+    <axis xyz="0.0 1.0 0.0" />
+  </xacro:wheel_v0>
+
+  <xacro:roller_v0 prefix="r1_F" parent="first_wheel_link">
+    <origin xyz="0.01275 0.004625 -0.00925" rpy="0 0 0" />
+    <axis xyz="0.0 0.0 -1.0" />
+  </xacro:roller_v0>
+
+  <xacro:roller_v0 prefix="r2_F" parent="first_wheel_link">
+    <origin xyz="-0.00925 0.004625 -0.01275" rpy="0 ${M_PI/2} 0" />
+    <axis xyz="0.0 0.0 -1.0" />
+  </xacro:roller_v0>
+
+  <xacro:roller_v0 prefix="r3_F" parent="first_wheel_link">
+    <origin xyz="-0.01275 0.004625 0.00925" rpy="0 ${M_PI} 0" />
+    <axis xyz="0.0 0.0 -1.0" />
+  </xacro:roller_v0>
+
+  <xacro:roller_v0 prefix="r4_F" parent="first_wheel_link">
+    <origin xyz="0.00925 0.004625 0.01275" rpy="0 ${3*M_PI/2} 0" />
+    <axis xyz="0.0 0.0 -1.0" />
+  </xacro:roller_v0>
+
+
+  <xacro:roller_v0 prefix="r5_F" parent="first_wheel_link">
+    <origin xyz="0.015556 0.013875 -0.002475" rpy="0 ${-3*M_PI/4} 0" />
+    <axis xyz="0.0 0.0 -1.0" />
+  </xacro:roller_v0>
+
+  <xacro:roller_v0 prefix="r6_F" parent="first_wheel_link">
+    <origin xyz="-0.002475 0.013875 -0.015556" rpy="0 ${-M_PI/4} 0" />
+    <axis xyz="0.0 0.0 -1.0" />
+  </xacro:roller_v0>
+
+  <xacro:roller_v0 prefix="r7_F" parent="first_wheel_link">
+    <origin xyz="-0.015556 0.013875 0.002475" rpy="0 ${M_PI/4} 0" />
+    <axis xyz="0.0 0.0 -1.0" />
+  </xacro:roller_v0>
+
+  <xacro:roller_v0 prefix="r8_F" parent="first_wheel_link">
+    <origin xyz="0.002475 0.013875 0.015556" rpy="0 ${-5*M_PI/4} 0" />
+    <axis xyz="0.0 0.0 -1.0" />
+  </xacro:roller_v0>
+
+  <!-- 2nd wheel -->
+  <xacro:wheel_v0 prefix="second" parent="base_link">
+    <origin xyz="0.0191875 -0.03323372487 -0.0" rpy="0 0 ${7*M_PI/6}" />
+    <axis xyz="0.0 1.0 0.0" />
+  </xacro:wheel_v0>
+
+  <xacro:roller_v0 prefix="r1_S" parent="second_wheel_link">
+    <origin xyz="0.01275 0.004625 -0.00925" rpy="0 0 0" />
+    <axis xyz="0.0 0.0 -1.0" />
+  </xacro:roller_v0>
+
+  <xacro:roller_v0 prefix="r2_S" parent="second_wheel_link">
+    <origin xyz="-0.00925 0.004625 -0.01275" rpy="0 ${M_PI/2} 0" />
+    <axis xyz="0.0 0.0 -1.0" />
+  </xacro:roller_v0>
+
+  <xacro:roller_v0 prefix="r3_S" parent="second_wheel_link">
+    <origin xyz="-0.01275 0.004625 0.00925" rpy="0 ${M_PI} 0" />
+    <axis xyz="0.0 0.0 -1.0" />
+  </xacro:roller_v0>
+
+  <xacro:roller_v0 prefix="r4_S" parent="second_wheel_link">
+    <origin xyz="0.00925 0.004625 0.01275" rpy="0 ${3*M_PI/2} 0" />
+    <axis xyz="0.0 0.0 -1.0" />
+  </xacro:roller_v0>
+
+
+  <xacro:roller_v0 prefix="r5_S" parent="second_wheel_link">
+    <origin xyz="0.015556 0.013875 -0.002475" rpy="0 ${-3*M_PI/4} 0" />
+    <axis xyz="0.0 0.0 -1.0" />
+  </xacro:roller_v0>
+
+  <xacro:roller_v0 prefix="r6_S" parent="second_wheel_link">
+    <origin xyz="-0.002475 0.013875 -0.015556" rpy="0 ${-M_PI/4} 0" />
+    <axis xyz="0.0 0.0 -1.0" />
+  </xacro:roller_v0>
+
+  <xacro:roller_v0 prefix="r7_S" parent="second_wheel_link">
+    <origin xyz="-0.015556 0.013875 0.002475" rpy="0 ${M_PI/4} 0" />
+    <axis xyz="0.0 0.0 -1.0" />
+  </xacro:roller_v0>
+
+  <xacro:roller_v0 prefix="r8_S" parent="second_wheel_link">
+    <origin xyz="0.002475 0.013875 0.015556" rpy="0 ${-5*M_PI/4} 0" />
+    <axis xyz="0.0 0.0 -1.0" />
+  </xacro:roller_v0>
+
+  <!-- 3rd wheel -->
+  <xacro:wheel_v0 prefix="third" parent="base_link">
+    <origin xyz="0.0191875 0.03323372487 -0.0" rpy="0 0 ${11*M_PI/6}" />
+    <axis xyz="0.0 1.0 0.0" />
+  </xacro:wheel_v0>
+
+  <xacro:roller_v0 prefix="r1_T" parent="third_wheel_link">
+    <origin xyz="0.01275 0.004625 -0.00925" rpy="0 0 0" />
+    <axis xyz="0.0 0.0 -1.0" />
+  </xacro:roller_v0>
+
+  <xacro:roller_v0 prefix="r2_T" parent="third_wheel_link">
+    <origin xyz="-0.00925 0.004625 -0.01275" rpy="0 ${M_PI/2} 0" />
+    <axis xyz="0.0 0.0 -1.0" />
+  </xacro:roller_v0>
+
+  <xacro:roller_v0 prefix="r3_T" parent="third_wheel_link">
+    <origin xyz="-0.01275 0.004625 0.00925" rpy="0 ${M_PI} 0" />
+    <axis xyz="0.0 0.0 -1.0" />
+  </xacro:roller_v0>
+
+  <xacro:roller_v0 prefix="r4_T" parent="third_wheel_link">
+    <origin xyz="0.00925 0.004625 0.01275" rpy="0 ${3*M_PI/2} 0" />
+    <axis xyz="0.0 0.0 -1.0" />
+  </xacro:roller_v0>
+
+
+  <xacro:roller_v0 prefix="r5_T" parent="third_wheel_link">
+    <origin xyz="0.015556 0.013875 -0.002475" rpy="0 ${-3*M_PI/4} 0" />
+    <axis xyz="0.0 0.0 -1.0" />
+  </xacro:roller_v0>
+
+  <xacro:roller_v0 prefix="r6_T" parent="third_wheel_link">
+    <origin xyz="-0.002475 0.013875 -0.015556" rpy="0 ${-M_PI/4} 0" />
+    <axis xyz="0.0 0.0 -1.0" />
+  </xacro:roller_v0>
+
+  <xacro:roller_v0 prefix="r7_T" parent="third_wheel_link">
+    <origin xyz="-0.015556 0.013875 0.002475" rpy="0 ${M_PI/4} 0" />
+    <axis xyz="0.0 0.0 -1.0" />
+  </xacro:roller_v0>
+
+  <xacro:roller_v0 prefix="r8_T" parent="third_wheel_link">
+    <origin xyz="0.002475 0.013875 0.015556" rpy="0 ${-5*M_PI/4} 0" />
+    <axis xyz="0.0 0.0 -1.0" />
+  </xacro:roller_v0>
+
+  <!-- lidar sensor -->
+  <xacro:lidar_v0 prefix="front" parent="base_link">
+    <origin xyz="0 0 0.005000000000000001" />
+  </xacro:lidar_v0>
+
+  <!-- ===============  Transmission =============== -->
+  <xacro:wheel_trans_v0 prefix="first" />
+  <xacro:wheel_trans_v0 prefix="second" />
+  <xacro:wheel_trans_v0 prefix="third" />
+
+  <!-- =============== Gazebo =============== -->
+  <!-- <gazebo>
+    <plugin name="gazebo_ros_control" filename="libgazebo_ros_control.so" />
+  </gazebo> -->
+
+  <!-- Base -->
+  <xacro:base_gazebo_v0 />
+
+  <!-- Wheel -->
+  <xacro:wheel_gazebo_v0 prefix="first" />
+  <xacro:wheel_gazebo_v0 prefix="second" />
+  <xacro:wheel_gazebo_v0 prefix="third" />
+
+  <!-- lidar sensor -->
+  <xacro:lidar_gazebo_v0 prefix="front" min_rad="-3.14" max_rad="3.14" min_range="0.1"
+    max_range="10" />
+
+  <ros2_control name="GazeboSystem" type="system">
+    <hardware>
+      <plugin>gazebo_ros2_control/GazeboSystem</plugin>
+    </hardware>
+    <joint name="first_wheel_joint">
+      <command_interface name="velocity">
+        <param name="min">-3.14</param>
+        <param name="max">3.14</param>
+      </command_interface>
+      <state_interface name="velocity" />
+      <state_interface name="position" />
+    </joint>
+
+    <joint name="second_wheel_joint">
+      <command_interface name="velocity">
+        <param name="min">-3.14</param>
+        <param name="max">3.14</param>
+      </command_interface>
+      <state_interface name="velocity" />
+      <state_interface name="position" />
+    </joint>
+
+    <joint name="third_wheel_joint">
+      <command_interface name="velocity">
+        <param name="min">-3.14</param>
+        <param name="max">3.14</param>
+      </command_interface>
+      <state_interface name="velocity" />
+      <state_interface name="position" />
+    </joint>
+  </ros2_control>
+
+  <gazebo>
+    <plugin name="gazebo_ros2_control" filename="libgazebo_ros2_control.so">
+      <parameters>$(find armmy_omnibot)/config/ros2_controller/3wheel_controllers.yaml</parameters>
+    </plugin>
+
+    <plugin name="gazebo_ros_p3d" filename="libgazebo_ros_p3d.so">
+        <ros>
+          <namespace>gazebo_ground_truth</namespace>
+        </ros>
+        <frame_name>world</frame_name>
+        <body_name>base_footprint</body_name>
+        <update_rate>50.0</update_rate>
+      </plugin>
+  </gazebo>
+</robot>

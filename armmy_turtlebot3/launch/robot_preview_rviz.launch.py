@@ -78,7 +78,7 @@ def generate_launch_description():
 
     # Add the commands to the launch description
     ld.add_action(robot_state_publisher_cmd)
-    # ld.add_action(joint_state_publisher_gui_cmd)
+    ld.add_action(joint_state_publisher_gui_cmd)
     ld.add_action(declare_rviz_config_file_cmd)
     ld.add_action(declare_use_rviz_cmd)
     ld.add_action(rviz_cmd)

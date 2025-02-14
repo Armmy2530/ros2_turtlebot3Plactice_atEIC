@@ -72,7 +72,7 @@
             <origin xyz="-0.032 0 0.0" rpy="0 0 0" />
             <geometry>
                 <mesh
-                    filename="package://turtlebot3_common/meshes/burger_base.dae"
+                    filename="file://$(find armmy_turtlebot3)/models/turtlebot3_common/meshes/burger_base.dae"
                     scale="0.001 0.001 0.001" />
             </geometry>
             <material name="light_black" />
@@ -103,7 +103,7 @@
             <origin xyz="0 0 0" rpy="1.57 0 0" />
             <geometry>
                 <mesh
-                    filename="package://turtlebot3_common/meshes/tire.dae"
+                    filename="file://$(find armmy_turtlebot3)/models/turtlebot3_common/meshes/tire.dae"
                     scale="0.001 0.001 0.001" />
             </geometry>
             <material name="dark" />
@@ -134,7 +134,7 @@
             <origin xyz="0 0 0" rpy="1.57 0 0" />
             <geometry>
                 <mesh
-                    filename="package://turtlebot3_common/meshes/tire.dae"
+                    filename="file://$(find armmy_turtlebot3)/models/turtlebot3_common/meshes/tire.dae"
                     scale="0.001 0.001 0.001" />
             </geometry>
             <material name="dark" />
@@ -190,4 +190,16 @@
         <mu1 value="0.001" />
         <mu2 value="0.001" />
     </gazebo>
+
+    <gazebo>
+        <plugin
+            filename="ignition-gazebo-pose-publisher-system"
+            name="gz::sim::systems::PosePublisher">
+            <publish_link_pose>true</publish_link_pose>
+            <publish_collision_pose>false</publish_collision_pose>
+            <publish_visual_pose>false</publish_visual_pose>
+            <publish_nested_model_pose>false</publish_nested_model_pose>
+        </plugin>
+    </gazebo>
+
 </robot>
