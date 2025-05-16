@@ -237,9 +237,9 @@
   <xacro:lidar_gazebo_v0 prefix="front" min_rad="-3.14" max_rad="3.14" min_range="0.1"
     max_range="10" />
 
-  <ros2_control name="IgnitionSystem" type="system">
+  <ros2_control name="GazeboSystem" type="system">
     <hardware>
-      <plugin>ign_ros2_control/IgnitionSystem</plugin>
+      <plugin>gz_ros2_control/GazeboSimSystem</plugin>
     </hardware>
     <joint name="first_wheel_joint">
       <command_interface name="velocity">
@@ -279,7 +279,8 @@
   </ros2_control>
 
   <gazebo>
-    <plugin name="ign_ros2_control::IgnitionROS2ControlPlugin" filename="libign_ros2_control-system.so">
+    <plugin name="gz_ros2_control::GazeboSimROS2ControlPlugin"
+      filename="libgz_ros2_control-system.so">
       <parameters>$(find armmy_omnibot)/config/ros2_controller/my_controllers.yaml</parameters>
     </plugin>
   </gazebo>

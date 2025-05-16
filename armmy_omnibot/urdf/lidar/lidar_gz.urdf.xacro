@@ -12,4 +12,35 @@
 	</link>
   </xacro:macro>
 
+  <xacro:macro name="lidar_gazebo_v0" params="prefix min_rad max_rad min_range max_range">
+	<gazebo reference="${prefix}_lidar_link">
+        <sensor name="laser" type="gpu_lidar">
+            <visualize>false</visualize>
+            <pose>0 0 0 0 0 0</pose>
+            <update_rate>5</update_rate>
+            <lidar>
+                <scan>
+                    <horizontal>
+                        <samples>360</samples>
+                        <resolution>1.000000</resolution>
+                        <min_angle>${min_rad}</min_angle>
+                        <max_angle>${max_rad}</max_angle>
+                    </horizontal>
+                </scan>
+                <range>
+                    <min>${min_range}</min>
+                    <max>${max_range}</max>
+                    <resolution>0.015000</resolution>
+                </range>
+                <noise>
+                    <type>gaussian</type>
+                    <mean>0.0</mean>
+                    <stddev>0.01</stddev>
+                </noise>
+            </lidar>
+            <topic>scan</topic>
+            <gz_frame_id>${prefix}_lidar_link</gz_frame_id>
+        </sensor>
+    </gazebo>
+  </xacro:macro>
 </robot>

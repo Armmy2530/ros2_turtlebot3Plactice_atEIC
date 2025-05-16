@@ -21,11 +21,13 @@ import os
 from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription
 from launch.conditions import IfCondition
-from launch.actions import IncludeLaunchDescription, DeclareLaunchArgument, TimerAction
+from launch.actions import IncludeLaunchDescription, DeclareLaunchArgument
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.substitutions import LaunchConfiguration
 from launch_ros.actions import Node
 from launch.actions import SetEnvironmentVariable
+from launch.actions import RegisterEventHandler
+from launch.event_handlers import OnProcessExit
 
 def generate_launch_description():
     package_name = 'armmy_turtlebot3'
@@ -40,6 +42,7 @@ def generate_launch_description():
         'turtlebot3_world_gz.world'
     )
 
+    # Launch configuration variables
     use_sim_time = LaunchConfiguration('use_sim_time', default='true')
     x_pose = LaunchConfiguration('x_pose', default='-2.0')
     y_pose = LaunchConfiguration('y_pose', default='1.0')
@@ -50,6 +53,7 @@ def generate_launch_description():
     rviz_config_file = LaunchConfiguration('rviz_config_file')
     use_rviz = LaunchConfiguration('use_rviz')
 
+    # Omni Controller parameters
     debug_cmd_vel = LaunchConfiguration('debug_cmd_vel', default='true')
     debug_odom = LaunchConfiguration('debug_odom', default='false')
     wheel_radius = LaunchConfiguration('wheel_radius', default='0.0247')
@@ -69,7 +73,8 @@ def generate_launch_description():
     
     gzmodel_cmd  = SetEnvironmentVariable(
         name='GZ_SIM_RESOURCE_PATH',
-        value=os.path.join(get_package_share_directory(omnibot_package_name),'..')
+        value=os.path.join(get_package_share_directory(package_name),'models') + ':' + 
+              os.path.join(get_package_share_directory(omnibot_package_name),'..')
     )
 
     gz_system_plugin_cmd  = SetEnvironmentVariable(
@@ -172,14 +177,16 @@ def generate_launch_description():
     ld.add_action(robot_state_publisher_cmd)
     ld.add_action(gazebo)
     ld.add_action(spawn_entity)
-    ld.add_action(forward_velocity_spawner)
-    ld.add_action(joint_broad_spawner)
-    ld.add_action(foxgloveBridge_cmd)
+    ld.add_action(ros_gz_bridge)
+    
     ld.add_action(twist_mux)
     ld.add_action(armmy_omni_controller_cmd)
-    ld.add_action(ros_gz_bridge)
-    ld.add_action(declare_rviz_config_file_cmd)
+    ld.add_action(forward_velocity_spawner)
+    ld.add_action(joint_broad_spawner)
+    
+    ld.add_action(foxgloveBridge_cmd)
     ld.add_action(declare_use_rviz_cmd)
+    ld.add_action(declare_rviz_config_file_cmd)
     ld.add_action(rviz_cmd)
 
     return ld
