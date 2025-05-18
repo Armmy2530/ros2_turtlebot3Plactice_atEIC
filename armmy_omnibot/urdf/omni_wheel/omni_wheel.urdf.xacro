@@ -26,6 +26,7 @@
         </geometry>
         <material name="light_black" />
       </visual>
+      
       <!-- <collision>
         <geometry>
           <mesh filename="package://armmy_omnibot/meshes/omni_wheel/wheel_base.stl"
