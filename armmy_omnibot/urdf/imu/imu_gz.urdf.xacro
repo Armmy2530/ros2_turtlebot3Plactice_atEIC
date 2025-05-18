@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://ros.org/wiki/xacro">
+  <xacro:include filename="$(find armmy_omnibot)/urdf/imu/imu.gz.xacro" />
+  <xacro:macro name="imu_v0" params="prefix parent *joint_origin">
+    <joint name="${prefix}_imu_joint" type="fixed">
+      <xacro:insert_block name="joint_origin" />
+      <parent link="${parent}" />
+      <child link="${prefix}_imu_link" />
+    </joint>
+    <link name="${prefix}_imu_link">
+    </link>
+  </xacro:macro>
+</robot>

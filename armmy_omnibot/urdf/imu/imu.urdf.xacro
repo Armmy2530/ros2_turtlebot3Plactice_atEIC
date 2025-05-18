@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://ros.org/wiki/xacro">
+  <xacro:include filename="$(find armmy_omnibot)/urdf/lidar/lidar.gazebo.xacro"/>
+
+  <xacro:macro name="lidar_v0" params="prefix parent *joint_origin">
+	<joint name="${prefix}_lidar_joint" type="fixed">
+	  <xacro:insert_block name="joint_origin"/>
+	  <parent link="${parent}"/>
+	  <child link="${prefix}_lidar_link"/>
+	</joint>
+	<link name="${prefix}_lidar_link">
+	</link>
+  </xacro:macro>
+
+</robot>

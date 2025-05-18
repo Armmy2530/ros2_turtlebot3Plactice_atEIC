@@ -18,6 +18,9 @@
       filename="gz-sim-scene-broadcaster-system"
       name="gz::sim::systems::SceneBroadcaster">
     </plugin>
+    <plugin filename="libignition-gazebo-imu-system.so"
+      name="ignition::gazebo::systems::Imu">
+    </plugin>
     <plugin
       filename="gz-sim-sensors-system"
       name="gz::sim::systems::Sensors">
@@ -29,10 +32,12 @@
     </plugin>
 
     <gravity>0 0 -9.8000000000000007</gravity>
-    <magnetic_field>5.5644999999999998e-06 2.2875799999999999e-05 -4.2388400000000002e-05</magnetic_field>
-    <atmosphere type='adiabatic'/>
+    <magnetic_field>5.5644999999999998e-06
+      2.2875799999999999e-05 -4.2388400000000002e-05</magnetic_field>
+    <atmosphere type='adiabatic' />
 
-    <light type="directional" name="sun">
+    <light
+      type="directional" name="sun">
       <cast_shadows>true</cast_shadows>
       <pose>0 0 10 0 0 0</pose>
       <diffuse>0.8 0.8 0.8 1</diffuse>
@@ -108,7 +113,8 @@
       </ode>
     </physics>
 
-    <model name="turtlebot3_world">
+    <model
+      name="turtlebot3_world">
       <static>1</static>
       <include>
         <uri>model://turtlebot3_world</uri>
