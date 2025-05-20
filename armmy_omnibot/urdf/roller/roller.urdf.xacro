@@ -3,6 +3,7 @@
 
   <xacro:property name="roller_length" value="0.0185" />
   <xacro:property name="roller_radius" value="0.00475" />
+  <xacro:property name="roller_tangent_radius" value="0.0175" />
   <xacro:property name="roller_mass" value="0.005" />
 
   <xacro:include filename="$(find armmy_omnibot)/urdf/roller/roller.transmission.xacro" />
@@ -27,16 +28,16 @@
       </visual>
 
       <collision>
+        <origin xyz="${roller_radius - roller_tangent_radius} 0 0.00925" rpy="0 0 0" />
         <geometry>
-          <mesh filename="package://armmy_omnibot/meshes/omni_wheel/Roller_Simplyfier.stl"
-            scale="0.001 0.001 0.001" />
+          <sphere radius="${roller_tangent_radius}" />
         </geometry>
       </collision>
 
       <!-- <collision>
-        <origin xyz="0 0 0.00925" rpy="0 0 0" />
         <geometry>
-          <cylinder radius="${roller_radius}" length="${roller_length}" />
+          <mesh filename="package://armmy_omnibot/meshes/omni_wheel/Roller_Simplyfier.stl"
+            scale="0.001 0.001 0.001" />
         </geometry>
       </collision> -->
 
@@ -67,5 +68,4 @@
       </surface>
     </link>
   </xacro:macro>
-
 </robot>

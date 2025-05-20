@@ -21,10 +21,10 @@
     <link name="${prefix}_wheel_link">
       <visual>
         <geometry>
-          <mesh filename="package://armmy_omnibot/meshes/omni_wheel/wheel_base.stl"
-            scale="0.001 0.001 0.001" />
+          <mesh filename="package://armmy_omnibot/meshes/omni_wheel/wheel_assembly.dae"
+            scale="1 1 1" />
         </geometry>
-        <material name="light_black" />
+        <!-- <material name="light_black" /> -->
       </visual>
       
       <!-- <collision>

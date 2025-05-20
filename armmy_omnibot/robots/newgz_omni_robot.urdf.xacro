@@ -7,8 +7,7 @@
   <xacro:arg name="sim_mode" default="false" />
 
   <xacro:include filename="$(find armmy_omnibot)/urdf/base/base.urdf.xacro"/>
-  <xacro:include filename="$(find armmy_omnibot)/urdf/omni_wheel/omni_wheel.urdf.xacro"/>
-  <xacro:include filename="$(find armmy_omnibot)/urdf/roller/roller.urdf.xacro"/>
+  <xacro:include filename="$(find armmy_omnibot)/urdf/omni_wheel/gz_omni_wheel.urdf.xacro"/>
   <xacro:include filename="$(find armmy_omnibot)/urdf/lidar/lidar_gz.urdf.xacro"/>
   <xacro:include filename="$(find armmy_omnibot)/urdf/imu/imu_gz.urdf.xacro"/>
   <xacro:include filename="$(find armmy_omnibot)/urdf/color.xacro"/>
@@ -27,93 +26,11 @@
     <axis xyz="0.0 1.0 0.0" />
   </xacro:wheel_v0>
 
-  <xacro:roller_v0 prefix="r1_F" parent="first_wheel_link">
-    <origin xyz="0.01275 0.004625 -0.00925" rpy="0 0 0" />
-    <axis xyz="0.0 0.0 -1.0" />
-  </xacro:roller_v0>
-
-  <xacro:roller_v0 prefix="r2_F" parent="first_wheel_link">
-    <origin xyz="-0.00925 0.004625 -0.01275" rpy="0 ${M_PI/2} 0" />
-    <axis xyz="0.0 0.0 -1.0" />
-  </xacro:roller_v0>
-
-  <xacro:roller_v0 prefix="r3_F" parent="first_wheel_link">
-    <origin xyz="-0.01275 0.004625 0.00925" rpy="0 ${M_PI} 0" />
-    <axis xyz="0.0 0.0 -1.0" />
-  </xacro:roller_v0>
-
-  <xacro:roller_v0 prefix="r4_F" parent="first_wheel_link">
-    <origin xyz="0.00925 0.004625 0.01275" rpy="0 ${3*M_PI/2} 0" />
-    <axis xyz="0.0 0.0 -1.0" />
-  </xacro:roller_v0>
-
-
-  <xacro:roller_v0 prefix="r5_F" parent="first_wheel_link">
-    <origin xyz="0.015556 0.013875 -0.002475" rpy="0 ${-3*M_PI/4} 0" />
-    <axis xyz="0.0 0.0 -1.0" />
-  </xacro:roller_v0>
-
-  <xacro:roller_v0 prefix="r6_F" parent="first_wheel_link">
-    <origin xyz="-0.002475 0.013875 -0.015556" rpy="0 ${-M_PI/4} 0" />
-    <axis xyz="0.0 0.0 -1.0" />
-  </xacro:roller_v0>
-
-  <xacro:roller_v0 prefix="r7_F" parent="first_wheel_link">
-    <origin xyz="-0.015556 0.013875 0.002475" rpy="0 ${M_PI/4} 0" />
-    <axis xyz="0.0 0.0 -1.0" />
-  </xacro:roller_v0>
-
-  <xacro:roller_v0 prefix="r8_F" parent="first_wheel_link">
-    <origin xyz="0.002475 0.013875 0.015556" rpy="0 ${-5*M_PI/4} 0" />
-    <axis xyz="0.0 0.0 -1.0" />
-  </xacro:roller_v0>
-
   <!-- 2nd wheel -->
   <xacro:wheel_v0 prefix="second" parent="base_link">
     <origin xyz="-0.038375 0.0 -0.0" rpy="0 0 ${M_PI/2}" />
     <axis xyz="0.0 1.0 0.0" />
   </xacro:wheel_v0>
-
-  <xacro:roller_v0 prefix="r1_S" parent="second_wheel_link">
-    <origin xyz="0.01275 0.004625 -0.00925" rpy="0 0 0" />
-    <axis xyz="0.0 0.0 -1.0" />
-  </xacro:roller_v0>
-
-  <xacro:roller_v0 prefix="r2_S" parent="second_wheel_link">
-    <origin xyz="-0.00925 0.004625 -0.01275" rpy="0 ${M_PI/2} 0" />
-    <axis xyz="0.0 0.0 -1.0" />
-  </xacro:roller_v0>
-
-  <xacro:roller_v0 prefix="r3_S" parent="second_wheel_link">
-    <origin xyz="-0.01275 0.004625 0.00925" rpy="0 ${M_PI} 0" />
-    <axis xyz="0.0 0.0 -1.0" />
-  </xacro:roller_v0>
-
-  <xacro:roller_v0 prefix="r4_S" parent="second_wheel_link">
-    <origin xyz="0.00925 0.004625 0.01275" rpy="0 ${3*M_PI/2} 0" />
-    <axis xyz="0.0 0.0 -1.0" />
-  </xacro:roller_v0>
-
-
-  <xacro:roller_v0 prefix="r5_S" parent="second_wheel_link">
-    <origin xyz="0.015556 0.013875 -0.002475" rpy="0 ${-3*M_PI/4} 0" />
-    <axis xyz="0.0 0.0 -1.0" />
-  </xacro:roller_v0>
-
-  <xacro:roller_v0 prefix="r6_S" parent="second_wheel_link">
-    <origin xyz="-0.002475 0.013875 -0.015556" rpy="0 ${-M_PI/4} 0" />
-    <axis xyz="0.0 0.0 -1.0" />
-  </xacro:roller_v0>
-
-  <xacro:roller_v0 prefix="r7_S" parent="second_wheel_link">
-    <origin xyz="-0.015556 0.013875 0.002475" rpy="0 ${M_PI/4} 0" />
-    <axis xyz="0.0 0.0 -1.0" />
-  </xacro:roller_v0>
-
-  <xacro:roller_v0 prefix="r8_S" parent="second_wheel_link">
-    <origin xyz="0.002475 0.013875 0.015556" rpy="0 ${-5*M_PI/4} 0" />
-    <axis xyz="0.0 0.0 -1.0" />
-  </xacro:roller_v0>
 
   <!-- 3rd wheel -->
   <xacro:wheel_v0 prefix="third" parent="base_link">
@@ -121,93 +38,12 @@
     <axis xyz="0.0 1.0 0.0" />
   </xacro:wheel_v0>
 
-  <xacro:roller_v0 prefix="r1_T" parent="third_wheel_link">
-    <origin xyz="0.01275 0.004625 -0.00925" rpy="0 0 0" />
-    <axis xyz="0.0 0.0 -1.0" />
-  </xacro:roller_v0>
-
-  <xacro:roller_v0 prefix="r2_T" parent="third_wheel_link">
-    <origin xyz="-0.00925 0.004625 -0.01275" rpy="0 ${M_PI/2} 0" />
-    <axis xyz="0.0 0.0 -1.0" />
-  </xacro:roller_v0>
-
-  <xacro:roller_v0 prefix="r3_T" parent="third_wheel_link">
-    <origin xyz="-0.01275 0.004625 0.00925" rpy="0 ${M_PI} 0" />
-    <axis xyz="0.0 0.0 -1.0" />
-  </xacro:roller_v0>
-
-  <xacro:roller_v0 prefix="r4_T" parent="third_wheel_link">
-    <origin xyz="0.00925 0.004625 0.01275" rpy="0 ${3*M_PI/2} 0" />
-    <axis xyz="0.0 0.0 -1.0" />
-  </xacro:roller_v0>
-
-
-  <xacro:roller_v0 prefix="r5_T" parent="third_wheel_link">
-    <origin xyz="0.015556 0.013875 -0.002475" rpy="0 ${-3*M_PI/4} 0" />
-    <axis xyz="0.0 0.0 -1.0" />
-  </xacro:roller_v0>
-
-  <xacro:roller_v0 prefix="r6_T" parent="third_wheel_link">
-    <origin xyz="-0.002475 0.013875 -0.015556" rpy="0 ${-M_PI/4} 0" />
-    <axis xyz="0.0 0.0 -1.0" />
-  </xacro:roller_v0>
-
-  <xacro:roller_v0 prefix="r7_T" parent="third_wheel_link">
-    <origin xyz="-0.015556 0.013875 0.002475" rpy="0 ${M_PI/4} 0" />
-    <axis xyz="0.0 0.0 -1.0" />
-  </xacro:roller_v0>
-
-  <xacro:roller_v0 prefix="r8_T" parent="third_wheel_link">
-    <origin xyz="0.002475 0.013875 0.015556" rpy="0 ${-5*M_PI/4} 0" />
-    <axis xyz="0.0 0.0 -1.0" />
-  </xacro:roller_v0>
-
   <!-- 4th wheel -->
   <xacro:wheel_v0 prefix="fourth" parent="base_link">
     <origin xyz="0.038375 0.0 -0.0" rpy="0 0 ${3*M_PI/2}" />
     <axis xyz="0.0 1.0 0.0" />
   </xacro:wheel_v0>
 
-  <xacro:roller_v0 prefix="r1_R" parent="fourth_wheel_link">
-    <origin xyz="0.01275 0.004625 -0.00925" rpy="0 0 0" />
-    <axis xyz="0.0 0.0 -1.0" />
-  </xacro:roller_v0>
-
-  <xacro:roller_v0 prefix="r2_R" parent="fourth_wheel_link">
-    <origin xyz="-0.00925 0.004625 -0.01275" rpy="0 ${M_PI/2} 0" />
-    <axis xyz="0.0 0.0 -1.0" />
-  </xacro:roller_v0>
-
-  <xacro:roller_v0 prefix="r3_R" parent="fourth_wheel_link">
-    <origin xyz="-0.01275 0.004625 0.00925" rpy="0 ${M_PI} 0" />
-    <axis xyz="0.0 0.0 -1.0" />
-  </xacro:roller_v0>
-
-  <xacro:roller_v0 prefix="r4_R" parent="fourth_wheel_link">
-    <origin xyz="0.00925 0.004625 0.01275" rpy="0 ${3*M_PI/2} 0" />
-    <axis xyz="0.0 0.0 -1.0" />
-  </xacro:roller_v0>
-
-
-  <xacro:roller_v0 prefix="r5_R" parent="fourth_wheel_link">
-    <origin xyz="0.015556 0.013875 -0.002475" rpy="0 ${-3*M_PI/4} 0" />
-    <axis xyz="0.0 0.0 -1.0" />
-  </xacro:roller_v0>
-
-  <xacro:roller_v0 prefix="r6_R" parent="fourth_wheel_link">
-    <origin xyz="-0.002475 0.013875 -0.015556" rpy="0 ${-M_PI/4} 0" />
-    <axis xyz="0.0 0.0 -1.0" />
-  </xacro:roller_v0>
-
-  <xacro:roller_v0 prefix="r7_R" parent="fourth_wheel_link">
-    <origin xyz="-0.015556 0.013875 0.002475" rpy="0 ${M_PI/4} 0" />
-    <axis xyz="0.0 0.0 -1.0" />
-  </xacro:roller_v0>
-
-  <xacro:roller_v0 prefix="r8_R" parent="fourth_wheel_link">
-    <origin xyz="0.002475 0.013875 0.015556" rpy="0 ${-5*M_PI/4} 0" />
-    <axis xyz="0.0 0.0 -1.0" />
-  </xacro:roller_v0>
 
   <!-- lidar sensor -->
   <xacro:lidar_v0 prefix="top" parent="base_link">

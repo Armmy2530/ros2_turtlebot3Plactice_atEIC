@@ -1,0 +1,23 @@
+# Example of omni wheel 2 layer witn angular offset
+wheel_radius: 0.035 # m, radius of wheel base
+tangent_radius: 0.020  # m, radius of each collision sphere along the wheel's edge
+
+# Number of rollers
+roller_count: 8
+
+# Position of each roller:
+# - theta: angle around the wheel (degrees)
+# - offset: offset from wheel center (in m)
+# - rotation_axis: axis of roller rotation (e.g., [1, 0, 0] means X-axis)
+
+position:
+- [0.0, 0.004625, [0.0, 0.0, 1.0]]
+- [90.0, 0.004625, [-1.0, 0.0, 0.0]]
+- [180.0, 0.004625, [-0.0, 0.0, -1.0]]
+- [270.0, 0.004625, [1.0, 0.0, -0.0]]
+
+- [45.0, 0.013875, [-0.707107, 0.0, 0.707107]]
+- [135.0, 0.013875, [-0.707107, 0.0, -0.707107]]
+- [225.0, 0.013875, [0.707107, 0.0, -0.707107]]
+- [315.0, 0.013875, [0.707107, 0.0, 0.707107]]
+
