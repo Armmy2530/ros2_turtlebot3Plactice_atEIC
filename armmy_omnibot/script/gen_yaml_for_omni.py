@@ -9,7 +9,7 @@ def inline_list_representer(dumper, data):
 
 yaml.add_representer(InlineList, inline_list_representer)
 
-def generate_omni_wheel_yaml(offsets_with_angles, rollers_per_layer, tangent_radius, wheel_radius = "** set wheel radius **", output_path="omni_wheel_config.yaml"):
+def generate_omni_wheel_yaml(offsets_with_angles, rollers_per_layer,roller_weight, tangent_radius, wheel_radius = "** set wheel radius **", output_path="omni_wheel_config.yaml"):
     """
     offsets_with_angles: list of [offset_translation (float), offset_angle (degrees float)]
     """
@@ -33,8 +33,9 @@ def generate_omni_wheel_yaml(offsets_with_angles, rollers_per_layer, tangent_rad
             positions.append(position_entry)
 
     config = {
-        'wheel_radius' : wheel_radius,
+        'wheel_radius': wheel_radius,
         'tangent_radius': tangent_radius,
+        'roller_weight': roller_weight,
         'roller_count': rollers_per_layer*len(offsets_with_angles),
         'position': positions
     }
@@ -53,6 +54,7 @@ if __name__ == "__main__":
     generate_omni_wheel_yaml(
         offsets_with_angles=offsets_with_angles,
         rollers_per_layer=4,
+        roller_weight=0.01,
         tangent_radius=0.020,
         wheel_radius=0.035,
         output_path="omni_config.yml"

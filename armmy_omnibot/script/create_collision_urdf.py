@@ -62,14 +62,14 @@ def generate_config_dump(config):
 
 def generate_position_orientation_section(roller_data):
     lines = [
-        "*_________________ Sphere position and orientation _________________*",
-        "* roller id | pos                       | orientation               *",
+        "*_______________________ Sphere position and orientation _______________________*",
+        "* roller id | pos (x, y, z)                   | axis (x, y, z)                  *",
     ]
     for i, (pos, ori) in enumerate(roller_data):
-        pos_str = ", ".join(map(str, pos))
-        ori_str = ", ".join(map(str, ori))
-        lines.append(f"* {i+1:<9} | {pos_str:<25} | {ori_str:<25} *")
-    lines.append("*"+"_"*67 + "*"+ "\n")
+        pos_str = ", ".join(f"{p:9.6f}" for p in pos)  # Fixed width float formatting
+        ori_str = ", ".join(f"{o:9.6f}" for o in ori)
+        lines.append(f"* {i+1:<9} | {pos_str:<30} | {ori_str:<30} *")  # Adjust widths for consistent alignment
+    lines.append("*" + "_"*79 + "*\n")  # Adjust length to match the new width
     return lines
 
 
@@ -82,7 +82,7 @@ def generate_urdf_block(config, roller_data):
         pos = " ".join(map(str, roller_data[i][0]))
         rpy = " ".join(map(str, roller_data[i][1]))
         lines.append(f"""<xacro:roller prefix="${{prefix}}" num="{i+1}">
-    <origin xyz="{pos}" rpy="{rpy}" />
+    <origin xyz="{pos}" rpy="0.0 0.0 0.0" />
     <axis xyz="{rpy}" />
 </xacro:roller>""")
     lines.append("\n")
@@ -91,14 +91,19 @@ def generate_urdf_block(config, roller_data):
 
 
 def generate_roller_macro(config):
+    roller_weight = config['roller_weight']
     tangent_radius = config['tangent_radius']
     lines = [
         "__________________ Create roller urdf __________________",
+        f'<xacro:property name="roller_mass" value="{roller_weight}" />',
         f'<xacro:property name="roller_radius" value="{tangent_radius}" />',
         """<xacro:macro name="roller" params="prefix num *joint_origin *joint_axis">		
     <link name="roller_${prefix}_${num}_link">
+        <xacro:inertial_sphere mass="${roller_mass}" radius="${roller_radius}">
+            <origin xyz="0 0 0" rpy="0 0 0" />
+        </xacro:inertial_sphere>
         <collision>
-            <xacro:insert_block name="joint_origin" />
+            <origin xyz="0 0 0" rpy="0 0 0" />
             <geometry>
                 <sphere radius="${roller_radius}" />
             </geometry>

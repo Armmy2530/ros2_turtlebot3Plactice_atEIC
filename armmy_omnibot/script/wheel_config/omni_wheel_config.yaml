@@ -1,5 +1,6 @@
-wheel_radius: 0.035
-tangent_radius: 0.020
+wheel_radius: 0.0175
+tangent_radius: 0.012
+roller_weight: 0.01
 roller_count: 8
 position:
 - [0.0, 0.004625, [0.0, 0.0, 1.0]]

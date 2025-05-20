@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <robot xmlns:xacro="http://ros.org/wiki/xacro">
     <xacro:include filename="$(find armmy_omnibot)/urdf/inertial_macros.xacro" />
-    <xacro:property name="roller_radius" value="0.02" />
-    <xacro:property name="roller_mass" value="0.001" />
+    <xacro:property name="roller_mass" value="0.02" />
+    <xacro:property name="roller_radius" value="0.012" />
     <xacro:macro name="roller" params="prefix num *joint_origin *joint_axis">
 
         <link name="roller_${prefix}_${num}_link">
@@ -10,7 +10,7 @@
                 <origin xyz="0 0 0" rpy="0 0 0" />
             </xacro:inertial_sphere>
             <collision>
-                <xacro:insert_block name="joint_origin" />
+                <origin xyz="0 0 0" rpy="0 0 0" />
                 <geometry>
                     <sphere radius="${roller_radius}" />
                 </geometry>

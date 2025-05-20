@@ -24,7 +24,6 @@
                     <mesh filename="package://armmy_omnibot/meshes/omni_wheel/wheel_assembly.dae"
                         scale="1 1 1" />
                 </geometry>
-                <!-- <material name="light_black" /> -->
             </visual>
 
             <xacro:inertial_cylinder mass="${wheel_mass}" length="${wheel_thickness}"
@@ -34,45 +33,36 @@
         </link>
 
         <xacro:roller prefix="${prefix}" num="1">
-            <!-- <origin xyz="0 0.0023125 0.0" rpy="0.0 0.0 0.0" /> -->
-            <origin xyz="0 0.004625 0.0" rpy="0.0 0.0 0.0" />
-            <!-- <origin xyz="0.015 0.1 0.0" rpy="0.0 0.0 0.0" /> -->
+            <origin xyz="0.0055 0.0046 0.0" rpy="0.0 0.0 0.0" />
             <axis xyz="0.0 0.0 1.0" />
         </xacro:roller>
-        <xacro:roller prefix="${prefix}" num="1_2">
-            <!-- <origin xyz="0 0.0023125 0.0" rpy="0.0 0.0 0.0" /> -->
-            <origin xyz="0 0.0185 0.0" rpy="0.0 0.0 0.0" />
-            <!-- <origin xyz="0.015 0.1 0.0" rpy="0.0 0.0 0.0" /> -->
-            <axis xyz="0.0 0.0 1.0" />
-        </xacro:roller>
-        <!-- <xacro:roller prefix="${prefix}" num="2">
-            <origin xyz="0.0 0.0046 0.015" rpy="-1.0 0.0 0.0" />
+        <xacro:roller prefix="${prefix}" num="2">
+            <origin xyz="0.0 0.0046 0.0055" rpy="0.0 0.0 0.0" />
             <axis xyz="-1.0 0.0 0.0" />
         </xacro:roller>
         <xacro:roller prefix="${prefix}" num="3">
-            <origin xyz="-0.015 0.0046 0.0" rpy="-0.0 0.0 -1.0" />
+            <origin xyz="-0.0055 0.0046 0.0" rpy="0.0 0.0 0.0" />
             <axis xyz="-0.0 0.0 -1.0" />
         </xacro:roller>
         <xacro:roller prefix="${prefix}" num="4">
-            <origin xyz="-0.0 0.0046 -0.015" rpy="1.0 0.0 -0.0" />
+            <origin xyz="-0.0 0.0046 -0.0055" rpy="0.0 0.0 0.0" />
             <axis xyz="1.0 0.0 -0.0" />
         </xacro:roller>
         <xacro:roller prefix="${prefix}" num="5">
-            <origin xyz="0.0106 0.0139 0.0106" rpy="-0.707107 0.0 0.707107" />
+            <origin xyz="0.0039 0.0139 0.0039" rpy="0.0 0.0 0.0" />
             <axis xyz="-0.707107 0.0 0.707107" />
         </xacro:roller>
         <xacro:roller prefix="${prefix}" num="6">
-            <origin xyz="-0.0106 0.0139 0.0106" rpy="-0.707107 0.0 -0.707107" />
+            <origin xyz="-0.0039 0.0139 0.0039" rpy="0.0 0.0 0.0" />
             <axis xyz="-0.707107 0.0 -0.707107" />
         </xacro:roller>
         <xacro:roller prefix="${prefix}" num="7">
-            <origin xyz="-0.0106 0.0139 -0.0106" rpy="0.707107 0.0 -0.707107" />
+            <origin xyz="-0.0039 0.0139 -0.0039" rpy="0.0 0.0 0.0" />
             <axis xyz="0.707107 0.0 -0.707107" />
         </xacro:roller>
         <xacro:roller prefix="${prefix}" num="8">
-            <origin xyz="0.0106 0.0139 -0.0106" rpy="0.707107 0.0 0.707107" />
+            <origin xyz="0.0039 0.0139 -0.0039" rpy="0.0 0.0 0.0" />
             <axis xyz="0.707107 0.0 0.707107" />
-        </xacro:roller> -->
+        </xacro:roller>
     </xacro:macro>
-
 </robot>
