@@ -18,14 +18,14 @@
     <link name="base_link">
       <visual>
         <geometry>
-          <mesh filename="file://$(find armmy_omnibot)/meshes/base_link.stl"
+          <mesh filename="package://armmy_omnibot/meshes/base_link.stl"
             scale="0.001 0.001 0.001" />
         </geometry>
         <material name="white" />
       </visual>
       <collision>
         <geometry>
-          <mesh filename="file://$(find armmy_omnibot)/meshes/base_link.stl"
+          <mesh filename="package://armmy_omnibot/meshes/base_link.stl"
             scale="0.001 0.001 0.001" />
         </geometry>
       </collision>
