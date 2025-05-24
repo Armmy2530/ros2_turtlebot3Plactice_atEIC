@@ -6,11 +6,11 @@
   <xacro:arg name="use_ros2_control" default="true" />
   <xacro:arg name="sim_mode" default="false" />
 
-  <xacro:include filename="$(find armmy_omnibot)/urdf/base/base.urdf.xacro"/>
-  <xacro:include filename="$(find armmy_omnibot)/urdf/omni_wheel/gz_omni_wheel.urdf.xacro"/>
-  <xacro:include filename="$(find armmy_omnibot)/urdf/lidar/lidar_gz.urdf.xacro"/>
-  <xacro:include filename="$(find armmy_omnibot)/urdf/imu/imu_gz.urdf.xacro"/>
-  <xacro:include filename="$(find armmy_omnibot)/urdf/color.xacro"/>
+  <xacro:include filename="$(find armmy_omnibot)/urdf/base/base.urdf.xacro" />
+  <xacro:include filename="$(find armmy_omnibot)/urdf/omni_wheel/gz_omni_wheel.urdf.xacro" />
+  <xacro:include filename="$(find armmy_omnibot)/urdf/lidar/lidar_gz.urdf.xacro" />
+  <xacro:include filename="$(find armmy_omnibot)/urdf/imu/imu_gz.urdf.xacro" />
+  <xacro:include filename="$(find armmy_omnibot)/urdf/color.xacro" />
 
   <!-- =============== Link & Joint =============== -->
   <!-- Base -->
@@ -70,7 +70,7 @@
   <xacro:wheel_gazebo_v0 prefix="first" />
   <xacro:wheel_gazebo_v0 prefix="second" />
   <xacro:wheel_gazebo_v0 prefix="third" />
-  <xacro:wheel_gazebo_v0 prefix="fourth" />  
+  <xacro:wheel_gazebo_v0 prefix="fourth" />
 
   <ros2_control name="GazeboSystem" type="system">
     <hardware>
@@ -118,5 +118,13 @@
       filename="libgz_ros2_control-system.so">
       <parameters>$(find armmy_omnibot)/config/ros2_controller/my_controllers.yaml</parameters>
     </plugin>
+    <plugin filename="libignition-gazebo6-pose-publisher-system.so"
+      name="ignition::gazebo::systems::PosePublisher">
+      <!-- <publish_model_pose>true</publish_model_pose> -->
+      <publish_link_pose>false</publish_link_pose>
+      <publish_nested_model_pose>true</publish_nested_model_pose>
+      <!-- <static_publisher>true</static_publisher> -->
+      <static_update_frequency>10</static_update_frequency>
+   </plugin>
   </gazebo>
 </robot>

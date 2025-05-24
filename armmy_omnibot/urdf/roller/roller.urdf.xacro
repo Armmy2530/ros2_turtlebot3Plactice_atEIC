@@ -28,18 +28,11 @@
       </visual>
 
       <collision>
-        <origin xyz="${roller_radius - roller_tangent_radius} 0 0.00925" rpy="0 0 0" />
-        <geometry>
-          <sphere radius="${roller_tangent_radius}" />
-        </geometry>
-      </collision>
-
-      <!-- <collision>
         <geometry>
           <mesh filename="package://armmy_omnibot/meshes/omni_wheel/Roller_Simplyfier.stl"
             scale="0.001 0.001 0.001" />
         </geometry>
-      </collision> -->
+      </collision>
 
       <xacro:inertial_cylinder mass="${roller_mass}" length="${roller_length}"
         radius="${roller_radius}">

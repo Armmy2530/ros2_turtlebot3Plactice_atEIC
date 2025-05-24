@@ -56,7 +56,7 @@ def generate_launch_description():
     # Omni Controller parameters
     debug_cmd_vel = LaunchConfiguration('debug_cmd_vel', default='true')
     debug_odom = LaunchConfiguration('debug_odom', default='false')
-    wheel_radius = LaunchConfiguration('wheel_radius', default='0.0247')
+    wheel_radius = LaunchConfiguration('wheel_radius', default='0.0175')
     wheel_offset = LaunchConfiguration('wheel_offset', default='0.067')
     init_theta = LaunchConfiguration('init_theta', default='0.0')
 

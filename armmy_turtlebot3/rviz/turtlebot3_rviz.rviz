@@ -70,11 +70,6 @@ Visualization Manager:
         Expand Link Details: false
         Expand Tree: false
         Link Tree Style: Links in Alphabetic Order
-        arm_link:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
         base_footprint:
           Alpha: 1
           Show Axes: false
@@ -84,22 +79,186 @@ Visualization Manager:
           Show Axes: false
           Show Trail: false
           Value: true
-        caster_wheel:
+        first_wheel_link:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        laser_frame:
+        fourth_wheel_link:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        wheel_left_link:
+        front_lidar_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        r1_F_roller_link:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        wheel_right_link:
+        r1_R_roller_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        r1_S_roller_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        r1_T_roller_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        r2_F_roller_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        r2_R_roller_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        r2_S_roller_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        r2_T_roller_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        r3_F_roller_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        r3_R_roller_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        r3_S_roller_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        r3_T_roller_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        r4_F_roller_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        r4_R_roller_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        r4_S_roller_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        r4_T_roller_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        r5_F_roller_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        r5_R_roller_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        r5_S_roller_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        r5_T_roller_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        r6_F_roller_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        r6_R_roller_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        r6_S_roller_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        r6_T_roller_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        r7_F_roller_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        r7_R_roller_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        r7_S_roller_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        r7_T_roller_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        r8_F_roller_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        r8_R_roller_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        r8_S_roller_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        r8_T_roller_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        second_wheel_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        third_wheel_link:
           Alpha: 1
           Show Axes: false
           Show Trail: false
@@ -117,19 +276,21 @@ Visualization Manager:
       Frame Timeout: 15
       Frames:
         All Enabled: false
-        arm_link:
-          Value: true
         base_footprint:
           Value: true
         base_link:
           Value: true
-        caster_wheel:
+        first_wheel_link:
           Value: true
-        laser_frame:
+        fourth_wheel_link:
           Value: true
-        wheel_left_link:
+        front_lidar_link:
           Value: true
-        wheel_right_link:
+        odom:
+          Value: true
+        second_wheel_link:
+          Value: true
+        third_wheel_link:
           Value: true
       Marker Scale: 0.4000000059604645
       Name: TF
@@ -139,16 +300,18 @@ Visualization Manager:
       Tree:
         base_footprint:
           base_link:
-            arm_link:
+            first_wheel_link:
               {}
-            caster_wheel:
+            fourth_wheel_link:
               {}
-            laser_frame:
+            front_lidar_link:
               {}
-            wheel_left_link:
+            second_wheel_link:
               {}
-            wheel_right_link:
+            third_wheel_link:
               {}
+        odom:
+          {}
       Update Interval: 0
       Value: true
     - Alpha: 1
@@ -319,7 +482,7 @@ Visualization Manager:
   Enabled: true
   Global Options:
     Background Color: 48; 48; 48
-    Fixed Frame: base_footprint
+    Fixed Frame: odom
     Frame Rate: 30
   Name: root
   Tools:
@@ -361,9 +524,9 @@ Visualization Manager:
         Swap Stereo Eyes: false
         Value: false
       Focal Point:
-        X: 0.13846421241760254
-        Y: -0.8592811822891235
-        Z: -2.384185791015625e-06
+        X: -1.593383550643921
+        Y: 0.029960274696350098
+        Z: 3.814697265625e-06
       Focal Shape Fixed Size: true
       Focal Shape Size: 0.05000000074505806
       Invert Z Axis: false

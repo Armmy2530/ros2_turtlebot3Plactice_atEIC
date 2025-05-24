@@ -25,6 +25,12 @@ class OdomGroundTruthPlotter(Node):
         self.ground_truth_x = []
         self.ground_truth_y = []
         self.ground_truth_heading = 0.00
+        
+        # For velocity calculation from ground truth pose
+        self.prev_gt_x = None
+        self.prev_gt_y = None
+        self.prev_gt_heading = None
+        self.prev_gt_time = None
         self.gt_vx = 0.00
         self.gt_vy = 0.00
         self.gt_ang_vel = 0.00
@@ -47,6 +53,8 @@ class OdomGroundTruthPlotter(Node):
         self.odom_ang_vel = msg.twist.twist.angular.z
 
     def ground_truth_callback(self, msg):
+        current_time = self.get_clock().now()
+        
         position = msg.pose.pose.position
         orientation = msg.pose.pose.orientation
 
@@ -59,9 +67,33 @@ class OdomGroundTruthPlotter(Node):
         yaw = math.atan2(siny_cosp, cosy_cosp)
         self.ground_truth_heading = yaw  # Store the yaw
 
-        self.gt_vx = msg.twist.twist.linear.x
-        self.gt_vy = msg.twist.twist.linear.y
-        self.gt_ang_vel = msg.twist.twist.angular.z
+        # Calculate velocities from pose differences
+        if (self.prev_gt_x is not None and self.prev_gt_y is not None and 
+            self.prev_gt_heading is not None and self.prev_gt_time is not None):
+            
+            dt = (current_time - self.prev_gt_time).nanoseconds / 1e9  # Convert to seconds
+            
+            if dt > 0:
+                # Linear velocities
+                dx = position.x - self.prev_gt_x
+                dy = position.y - self.prev_gt_y
+                self.gt_vx = dx / dt
+                self.gt_vy = dy / dt
+                
+                # Angular velocity
+                dyaw = yaw - self.prev_gt_heading
+                # Handle angle wrapping
+                if dyaw > math.pi:
+                    dyaw -= 2 * math.pi
+                elif dyaw < -math.pi:
+                    dyaw += 2 * math.pi
+                self.gt_ang_vel = dyaw / dt
+
+        # Store current values for next iteration
+        self.prev_gt_x = position.x
+        self.prev_gt_y = position.y
+        self.prev_gt_heading = yaw
+        self.prev_gt_time = current_time
 
 def setup_plot(ax):
     ax.axhline(0, color='black', linewidth=0.5)
@@ -132,6 +164,14 @@ def main():
             node.odom_y.clear()
             node.ground_truth_x.clear()
             node.ground_truth_y.clear()
+            # Reset velocity calculation variables
+            node.prev_gt_x = None
+            node.prev_gt_y = None
+            node.prev_gt_heading = None
+            node.prev_gt_time = None
+            node.gt_vx = 0.00
+            node.gt_vy = 0.00
+            node.gt_ang_vel = 0.00
             node.get_logger().info('Cleared all data')
 
     fig.canvas.mpl_connect('key_press_event', on_key)

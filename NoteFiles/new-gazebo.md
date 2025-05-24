@@ -26,3 +26,7 @@ sudo apt install ros-humble-gz-ros2-control
 
 ### brige imu topic
 - see detail <https://github.com/gazebosim/ros_gz/tree/ros2/ros_gz_sim_demos>
+
+
+# gz bridge compatiblyty message type
+- see datail <https://github.com/gazebosim/ros_gz/blob/ros2/ros_gz_bridge/README.md>

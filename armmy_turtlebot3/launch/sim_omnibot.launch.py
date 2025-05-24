@@ -27,6 +27,7 @@ from launch.substitutions import LaunchConfiguration
 from launch_ros.actions import Node
 from launch.actions import SetEnvironmentVariable
 
+
 def generate_launch_description():
     package_name = 'armmy_turtlebot3'
     omnibot_package_name = 'armmy_omnibot'
@@ -40,14 +41,16 @@ def generate_launch_description():
         'turtlebot3_world.world'
     )
 
-    defalut_gz_params = os.path.join(get_package_share_directory(package_name),'config','gazebo','gazebo_params.yaml')
+    defalut_gz_params = os.path.join(get_package_share_directory(
+        package_name), 'config', 'gazebo', 'gazebo_params.yaml')
 
     use_sim_time = LaunchConfiguration('use_sim_time', default='true')
     x_pose = LaunchConfiguration('x_pose', default='-2.0')
     y_pose = LaunchConfiguration('y_pose', default='1.0')
     gz_verbose = LaunchConfiguration('verbose', default='false')
     world_file = LaunchConfiguration('world', default=default_world)
-    robot_model = LaunchConfiguration('robot_model', default=os.path.join(get_package_share_directory(omnibot_package_name), 'robots','omni_robot.urdf.xacro'))
+    robot_model = LaunchConfiguration('robot_model', default=os.path.join(
+        get_package_share_directory(omnibot_package_name), 'robots', 'omni_robot.urdf.xacro'))
     use_ros2_control = LaunchConfiguration('use_ros2_control', default='true')
     rviz_config_file = LaunchConfiguration('rviz_config_file')
     use_rviz = LaunchConfiguration('use_rviz')
@@ -57,28 +60,31 @@ def generate_launch_description():
     wheel_radius = LaunchConfiguration('wheel_radius', default='0.0247')
     wheel_offset = LaunchConfiguration('wheel_offset', default='0.067')
     init_theta = LaunchConfiguration('init_theta', default='0.0')
-    
+
     declare_rviz_config_file_cmd = DeclareLaunchArgument(
         'rviz_config_file',
         default_value=os.path.join(
             package_dir, 'rviz', 'turtlebot3_rviz.rviz'),
         description='Full path to the RVIZ config file to use')
-    
+
     declare_use_rviz_cmd = DeclareLaunchArgument(
         'use_rviz',
         default_value='True',
         description='Whether to start RVIZ')
-    
-    gzmodel_cmd  = SetEnvironmentVariable(
+
+    gzmodel_cmd = SetEnvironmentVariable(
         name='GAZEBO_MODEL_PATH',
-        value=os.path.join(get_package_share_directory(omnibot_package_name),'..') # Back one step for loading model in URDF File
+        # Back one step for loading model in URDF File
+        value=os.path.join(get_package_share_directory(
+            omnibot_package_name), '..')
     )
 
     gzserver_cmd = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
             os.path.join(pkg_gazebo_ros, 'launch', 'gzserver.launch.py')
         ),
-        launch_arguments={'world': world_file,'verbose': gz_verbose,'extra_gazebo_args':'--ros-args --params-file '+defalut_gz_params}.items()
+        launch_arguments={'world': world_file, 'verbose': gz_verbose,
+                          'extra_gazebo_args': '--ros-args --params-file '+defalut_gz_params}.items()
     )
 
     gzclient_cmd = IncludeLaunchDescription(
@@ -88,32 +94,34 @@ def generate_launch_description():
     )
 
     foxgloveBridge_cmd = Node(
-            package='foxglove_bridge',
-            executable='foxglove_bridge',
-            name='foxglove_bridge',
-            output='screen',
-            parameters=[{'use_sim_time': use_sim_time}],
+        package='foxglove_bridge',
+        executable='foxglove_bridge',
+        name='foxglove_bridge',
+        output='screen',
+        parameters=[{'use_sim_time': use_sim_time}],
     )
 
-    twist_mux_params = os.path.join(get_package_share_directory(package_name),'config','twist_mux','twist_mux.yaml')
+    twist_mux_params = os.path.join(get_package_share_directory(
+        package_name), 'config', 'twist_mux', 'twist_mux.yaml')
     twist_mux = Node(
-            package="twist_mux",
-            executable="twist_mux",
-            parameters=[twist_mux_params, {'use_sim_time': True}],
-            remappings=[('/cmd_vel_out','/diff_cont/cmd_vel_unstamped')]
-        )
-    
+        package="twist_mux",
+        executable="twist_mux",
+        parameters=[twist_mux_params, {'use_sim_time': True}],
+        remappings=[('/cmd_vel_out', '/diff_cont/cmd_vel_unstamped')]
+    )
+
     twist_stamper = Node(
-            package='twist_stamper',
-            executable='twist_stamper',
-            parameters=[{'use_sim_time': use_sim_time}],
-            remappings=[('/cmd_vel_in','/diff_cont/cmd_vel_unstamped'),
-                        ('/cmd_vel_out','/diff_cont/cmd_vel')]
-         )
-    
+        package='twist_stamper',
+        executable='twist_stamper',
+        parameters=[{'use_sim_time': use_sim_time}],
+        remappings=[('/cmd_vel_in', '/diff_cont/cmd_vel_unstamped'),
+                    ('/cmd_vel_out', '/diff_cont/cmd_vel')]
+    )
+
     robot_state_publisher_cmd = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
-            os.path.join(package_dir, 'launch', 'robot_state_publisher.launch.py')
+            os.path.join(package_dir, 'launch',
+                         'robot_state_publisher.launch.py')
         ),
         launch_arguments={
             'use_sim_time': use_sim_time,
@@ -123,16 +131,16 @@ def generate_launch_description():
     )
 
     spawn_robot_cmd = Node(package='gazebo_ros', executable='spawn_entity.py',
-                        arguments=['-topic', 'robot_description',
-                                    '-entity', 'my_bot',
-                                    '-x', x_pose,
-                                    '-y', y_pose,
-                                    '-z','0.01',
-                                    ],
-                        output='screen')
-    
+                           arguments=['-topic', 'robot_description',
+                                      '-entity', 'my_bot',
+                                      '-x', x_pose,
+                                      '-y', y_pose,
+                                      '-z', '0.01',
+                                      ],
+                           output='screen')
+
     delay_spawn_robot_cmd = TimerAction(
-        period=15.0,
+        period=5.0,
         actions=[spawn_robot_cmd]
     )
 
@@ -149,19 +157,20 @@ def generate_launch_description():
     )
 
     armmy_omni_controller_cmd = Node(
-            package='armmy_omni_controller',
-            executable='omni_controller',
-            parameters=[{'use_sim_time': use_sim_time,
-                'debug_cmd_vel': debug_cmd_vel,
-                'debug_odom'   : debug_odom,
-                'wheel_radius' : wheel_radius,
-                'wheel_offset' : wheel_offset,
-                'init_x'       : x_pose,
-                'init_y'       : y_pose,
-                'init_theta'   : init_theta,
-            }],
-            condition=IfCondition(LaunchConfiguration('use_omni_controller', default='true'))
-         )
+        package='armmy_omni_controller',
+        executable='omni_controller',
+        parameters=[{'use_sim_time': use_sim_time,
+                     'debug_cmd_vel': debug_cmd_vel,
+                     'debug_odom': debug_odom,
+                     'wheel_radius': wheel_radius,
+                     'wheel_offset': wheel_offset,
+                     'init_x': x_pose,
+                     'init_y': y_pose,
+                     'init_theta': init_theta,
+                     }],
+        condition=IfCondition(LaunchConfiguration(
+            'use_omni_controller', default='true'))
+    )
 
     rviz_cmd = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
@@ -187,5 +196,5 @@ def generate_launch_description():
     ld.add_action(declare_rviz_config_file_cmd)
     ld.add_action(declare_use_rviz_cmd)
     ld.add_action(rviz_cmd)
-    
+
     return ld
