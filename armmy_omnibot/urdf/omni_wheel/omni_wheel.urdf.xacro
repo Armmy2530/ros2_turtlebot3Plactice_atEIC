@@ -15,6 +15,7 @@
       <parent link="${parent}" />
       <child link="${prefix}_wheel_link" />
       <limit effort="100" velocity="100" />
+      <dynamics damping="0.7" />
       <xacro:insert_block name="joint_axis" />
     </joint>
 

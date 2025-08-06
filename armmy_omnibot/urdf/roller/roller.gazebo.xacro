@@ -4,7 +4,7 @@
   <xacro:macro name="roller_gazebo_v0" params="prefix">
     <gazebo reference="${prefix}_roller_link">
       <!-- <selfCollide>false</selfCollide> -->
-      <mu1 value="1.2" />
+      <mu value="8.8" />
       <mu2 value="1.2" />
     </gazebo>
   </xacro:macro>

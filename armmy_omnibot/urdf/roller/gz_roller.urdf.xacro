@@ -15,13 +15,14 @@
                     <sphere radius="${roller_radius}" />
                 </geometry>
             </collision>
-            <!-- <visual>
-                <xacro:insert_block name="joint_origin" />
-                <geometry>
-                    <sphere radius="${roller_radius}" />
-                </geometry>
-                <material name="Gazebo/Blue" />
-            </visual> -->
+            <surface>
+                <friction>
+                    <ode>
+                        <mu>1.0</mu>
+                        <mu2>1.0</mu2>
+                    </ode>
+                </friction>
+            </surface>
         </link>
         <joint name="roller_${prefix}_${num}_joint" type="continuous">
             <xacro:insert_block name="joint_origin" />
